@@ -1,0 +1,36 @@
+# Opacity
+background_opacity: 0.5
+
+# P10k font
+font:
+  normal:
+    family: "MesloLGS NF"
+
+# Themes
+schemes:
+  purple-vibe: &purple-vibe
+    #primary:
+    #  background: '#282a36'
+    #  foreground: '#f8f8f2'
+
+    normal:
+      black:   '#1b1c1c'
+      red:     '#ff4046'
+      green:   '#50ff40'
+      yellow:  '#f9ff40'
+      blue:    '#4043ff'
+      magenta: '#a640ff'
+      cyan:    '#40bcff'
+      white:   '#c9c9c9'
+
+    bright:
+      black:   '#6a6b8a'
+      red:     '#ff293b'
+      green:   '#29ff30'
+      yellow:  '#f4ff29'
+      blue:    '#3029ff'
+      magenta: '#8229ff'
+      cyan:    '#29eaff'
+      white:   '#ffffff'
+
+colors: *purple-vibe

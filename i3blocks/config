@@ -1,0 +1,15 @@
+[clock]
+command=echo "$(date +%R)"
+interval=60
+
+[date]
+command=echo "$(date +%e-%m-%Y)"
+interval=900
+
+[battery]
+command=echo "$(cat /sys/class/power_supply/BAT0/capacity)%"
+interval=300
+
+[wifi]
+command=echo "$(iwctl station wlan0 show | awk '/Connected network/{print $3,$4}')"
+interval=300

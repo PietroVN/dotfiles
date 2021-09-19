@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+echo "Video/Music to play"
+read NAME
+echo ""
+
+mpv --no-video $(youtube-dl --get-url ytsearch:"${NAME}") $1 > /dev/null
+

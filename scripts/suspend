@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+# Lock screen
+sh /usr/local/bin/lockscreen
+
+# Hibernate
+systemctl hybrid-sleep

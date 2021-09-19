@@ -1,0 +1,63 @@
+#!/usr/bin/bash
+echo "########################"
+echo "Aur Snapshot | Installer"
+echo "########################"
+echo "Current dir: $(pwd)"
+echo ""
+
+echo "Mode"
+echo "1 - Compile package"
+echo "2 - Compile package & install deps"
+read MODE
+echo ""
+
+echo "Enter package name"
+read PACKAGE
+echo ""
+
+SNAPSHOT_DIR=/.snapshots
+SNAPSHOT_NAME=$(date +%d_%m_%Y-%H-%M)-aur-install-${PACKAGE}
+
+echo "Creating snapshot"
+sudo btrfs subvol snapshot "/" "${SNAPSHOT_DIR}/${SNAPSHOT_NAME}"
+echo ""
+
+# Compile | Install deps
+if [[ ${MODE} -eq "1" ]]; then
+	echo "Compiling ${PACKAGE}"
+	makepkg
+elif [[ ${MODE} -eq "2" ]]; then
+	echo "Installing deps & Compiling ${PACKAGE}"
+	makepkg -s
+fi
+echo ""
+echo "${PACKAGE} Compiled"
+echo ""
+
+echo "Install ${PACKAGE}?"
+echo "1 - Yes"
+echo "2 - No"
+read INSTALL
+echo ""
+
+if [[ ${INSTALL} -eq "1" ]]; then
+	echo "Installing ${PACKAGE}"
+	sudo pacman -U *.zst
+fi
+
+# Ask to save snapshot
+echo "You want to delete snapshot?"
+echo "1 - Save (No)"
+echo "2 - Delete (Yes)"
+read DELETE_SNAPSHOT
+echo ""
+
+if [[ ${DELETE_SNAPSHOT} -eq "1" ]]; then
+        echo "Snapshot Saved"
+        echo ""
+        echo "Reloading grub"
+        sudo grub-mkconfig -o /boot/grub/grub.cfg
+elif [[ ${DELETE_SNAPSHOT} -eq "2" ]]; then
+        sudo rm -rf "${SNAPSHOT_PATH}/${SNAPSHOT_NAME}"
+        echo "Snapshot deleted"
+fi

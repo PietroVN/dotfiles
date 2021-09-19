@@ -1,0 +1,42 @@
+#!/usr/bin/bash
+echo "########"
+echo "Snapshot"
+echo "########"
+echo "Current dir: $(pwd)"
+echo ""
+
+echo "Mode"
+echo "1 - Snapshot"
+#echo "2 - Compile package & install deps"
+read MODE
+echo ""
+
+echo "Enter snapshot name"
+read NAME
+echo ""
+
+SNAPSHOT_NAME=$(date +%d_%m_%Y-%H-%M)-${NAME}
+SNAPSHOT_DIR=/.snapshots
+
+echo "Creating snapshot"
+sudo btrfs subvol snapshot "/" "${SNAPSHOT_DIR}/${SNAPSHOT_NAME}"
+rm -rf "${SNAPSHOT_DIR}/${SNAPSHOT_NAME}/home"
+sudo btrfs subvol snapshot "/home" "${SNAPSHOT_DIR}/${SNAPSHOT_NAME}/home"
+echo ""
+
+# Ask to save snapshot
+echo "You want to delete snapshot?"
+echo "1 - Save (No)"
+echo "2 - Delete (Yes)"
+read DELETE_SNAPSHOT
+echo ""
+
+if [[ ${DELETE_SNAPSHOT} -eq "1" ]]; then
+        echo "Snapshot Saved"
+        echo ""
+        echo "Reloading grub"
+        sudo grub-mkconfig -o /boot/grub/grub.cfg
+elif [[ ${DELETE_SNAPSHOT} -eq "2" ]]; then
+        sudo rm -rf "${SNAPSHOT_PATH}/${SNAPSHOT_NAME}"
+        echo "Snapshot deleted"
+fi

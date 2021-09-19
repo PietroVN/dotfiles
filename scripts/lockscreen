@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+
+# Create a screenshot
+maim > ~/.screenlock.png
+
+# Blur screenshot
+convert ~/.screenlock.png -filter Gaussian -blur 0x8 ~/.screenlock.png
+
+# i3lock
+i3lock -i ~/.screenlock.png
