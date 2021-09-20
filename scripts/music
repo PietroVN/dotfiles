@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #
 # Simple Music Script
 # By: PietroVN
@@ -6,13 +6,14 @@
 # Usage:
 # 	music <music name>
 # 	seek <time>
+#	pause <yes/no>
 # 	quit
 
 # get args (music name)
 NAME=$@
 
 # play song
-mpv --no-terminal --no-video --input-ipc-server=/tmp/mpvsocket $(youtube-dl --get-url ytsearch:"${NAME}") &
+mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket $(youtube-dl --get-url ytsearch:"${NAME}") &
 
 # wait mpv start
 sleep 5
@@ -24,13 +25,18 @@ while true; do
 
 		# Quit
 		if [[ ${COMMAND} == "quit" ]]; then
-				echo '{ "command": ["quit"] }' | socat - /tmp/mpvsocket > /dev/null
-				break
+			echo '{ "command": ["quit"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+			break
 		fi
 
 		# Seek
 		if [[ ${COMMAND} == *"seek"* ]]; then
-				sed "s/SEEK/$(echo ${COMMAND} | awk '{print $2}')/g" <<< '{ "command": ["set_property", "playback-time", "SEEK"] }'  | socat - /tmp/mpvsocket > /dev/null
+			sed "s/SEEK/$(echo ${COMMAND} | awk '{print $2}')/g" <<< '{ "command": ["set_property", "playback-time", "SEEK"] }'  | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+		fi
+
+		# Pause
+		if [[ ${COMMAND} == *"pause"* ]]; then
+			sed "s/STATE/$(echo ${COMMAND} | awk '{print $2}')/g" <<<'{ "command": ["set_property", "pause", "STATE"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 		fi
 
 done
