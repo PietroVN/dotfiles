@@ -4,19 +4,35 @@
 # By: PietroVN
 # Requirements: youtube-dl, mpv, socat
 # Usage:
-# 	music <music name>
-# 	seek <time>
+# 	music <music name/link>
+# 	seek  <time>
 #	pause <yes/no>
+# 	loop  <yes/no>
 # 	quit
 
 # get args (music name)
 NAME=$@
 
-# play song
-mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket $(youtube-dl --get-url ytsearch:"${NAME}") &
+# Check if NAME is empty and if mpv is running
+if [[ -z ${NAME} ]]; then
+		if [[ ! $(pgrep mpv) ]]; then
+				echo "You need to enter a music name or link"
+				exit
+		fi
+fi
 
-# wait mpv start
-sleep 5
+if [[ ! -z ${NAME} ]]; then 
+
+		# Play song
+		if [[ ${NAME} != *"https"* ]]; then
+				mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket $(youtube-dl --get-url ytsearch:"${NAME}") &
+		else
+				mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket ${NAME} &
+		fi
+
+		# wait mpv start
+		sleep 5
+fi
 
 # Main Loop
 while true; do
@@ -39,5 +55,29 @@ while true; do
 			sed "s/STATE/$(echo ${COMMAND} | awk '{print $2}')/g" <<<'{ "command": ["set_property", "pause", "STATE"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 		fi
 
+		# Play
+		if [[ ${COMMAND} == *"music"* ]]; then
+				
+				# End already running mpv process
+				killall mpv
+				
+				COMMAND=$(sed s/music//g <<< ${COMMAND})
+				
+				# Play song
+				if [[ ${COMMAND} != *"https"* ]]; then
+						mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket $(youtube-dl --get-url ytsearch:"${COMMAND}") &
+				else
+						mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvscoket ${COMMAND} &
+				fi
+
+				# Wait for mpv start
+				sleep 5
+
+		fi
+		
+		# Loop
+        if [[ ${COMMAND} == *"loop"* ]]; then
+				sed "s/STATE/$(echo ${COMMAND} | awk '{print $2}')/g" <<<'{ "command": ["set_property", "loop", "STATE"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+        fi
 done
 

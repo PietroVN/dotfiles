@@ -39,6 +39,9 @@ let g:onedark_color_overrides = {
 " True color support
 set termguicolors
 
+" Disable line break
+set nowrap
+
 " Enable number on sidebar
 set number
 
