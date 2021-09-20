@@ -9,6 +9,7 @@
 #	pause <yes/no>
 # 	loop  <yes/no>
 # 	quit
+# 	stop
 # 	e.g music play hollow knight ost
 
 # get args (music name | command)
@@ -16,8 +17,8 @@ COMMAND=$@
 
 # Commands
 run_command () {
-		# Quit
-		if [[ ${COMMAND} == "quit" ]]; then
+		# Quit / Stop
+		if [[ ${COMMAND} == "quit" || ${COMMAND} == "stop" ]]; then
 			echo '{ "command": ["quit"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 		fi
 
@@ -52,7 +53,7 @@ run_command () {
 				sleep 5
 
 				# Re-enable previous options
-				if [[ ${LOOP} == "yes" ]]; then
+				if [[ -f ${XDG_RUNTIME_DIR}/mpvloop && $(cat ${XDG_RUNTIME_DIR}/mpvloop) == "yes" ]]; then
 						echo '{ "command": ["set_property", "loop", "yes"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 				fi
 		fi
@@ -61,6 +62,7 @@ run_command () {
 	    if [[ ${COMMAND} == *"loop"* ]]; then
 				sed "s/STATE/$(echo ${COMMAND} | awk '{print $2}')/g" <<<'{ "command": ["set_property", "loop", "STATE"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 				LOOP=$(echo ${COMMAND} | awk '{print $2}')
+				echo ${LOOP} > ${XDG_RUNTIME_DIR}/mpvloop
         fi
 }
 
