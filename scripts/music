@@ -4,45 +4,21 @@
 # By: PietroVN
 # Requirements: youtube-dl, mpv, socat
 # Usage:
-# 	music <music name/link>
+# 	music <command)
 # 	seek  <time>
 #	pause <yes/no>
 # 	loop  <yes/no>
 # 	quit
+# 	e.g music play hollow knight ost
 
-# get args (music name)
-NAME=$@
+# get args (music name | command)
+COMMAND=$@
 
-# Check if NAME is empty and if mpv is running
-if [[ -z ${NAME} ]]; then
-		if [[ ! $(pgrep -f mpv) ]]; then
-				echo "You need to enter a music name or link"
-				exit
-		fi
-fi
-
-if [[ ! -z ${NAME} ]]; then 
-
-		# Play song
-		if [[ ${NAME} != *"https"* ]]; then
-				mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket $(youtube-dl --get-url ytsearch:"${NAME}") &
-		else
-				mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket ${NAME} &
-		fi
-
-		# wait mpv start
-		sleep 5
-fi
-
-# Main Loop
-while true; do
-		echo "Receiving Commands:"
-		read -r COMMAND
-
+# Commands
+run_command () {
 		# Quit
 		if [[ ${COMMAND} == "quit" ]]; then
 			echo '{ "command": ["quit"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
-			break
 		fi
 
 		# Seek
@@ -56,14 +32,14 @@ while true; do
 		fi
 
 		# Play
-		if [[ ${COMMAND} == *"music"* ]]; then
+		if [[ ${COMMAND} == *"play"* ]]; then
 
 				# End already running mpv process
 				if [[ $(pgrep -f mpv) ]]; then
 						killall mpv
 				fi
 				
-				COMMAND=$(sed s/music//g <<< ${COMMAND})
+				COMMAND=$(sed s/play//g <<< ${COMMAND})
 				
 				# Play song
 				if [[ ${COMMAND} != *"https"* ]]; then
@@ -86,5 +62,19 @@ while true; do
 				sed "s/STATE/$(echo ${COMMAND} | awk '{print $2}')/g" <<<'{ "command": ["set_property", "loop", "STATE"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 				LOOP=$(echo ${COMMAND} | awk '{print $2}')
         fi
-done
+}
 
+# Check if command is empty
+if [[ -z ${COMMAND} ]]; then
+		echo "You need to enter a music name/link or a command"
+		exit
+fi
+
+# Check if mpv is playing anything
+if [[ ${COMMAND} != *"play"* && ! $(pgrep -f mpv) ]]; then
+		echo "No MPV process detected, first you need to run: music play <music name/link>"
+		exit
+fi
+
+# Run command function
+run_command
