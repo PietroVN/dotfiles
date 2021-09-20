@@ -1,14 +1,21 @@
 #!/usr/bin/bash
+#
+# Simple Music Script
+# By: PietroVN
+# Requirements: youtube-dl, mpv, socat
+# Usage:
+# 	music <music name>
+# 	seek <time>
+# 	quit
 
-echo "Video/Music to play"
-read NAME
-echo ""
-
-sleep 3
+# get args (music name)
+NAME=$@
 
 # play song
 mpv --no-terminal --no-video --input-ipc-server=/tmp/mpvsocket $(youtube-dl --get-url ytsearch:"${NAME}") &
 
+# wait mpv start
+sleep 5
 
 # Main Loop
 while true; do
@@ -17,15 +24,13 @@ while true; do
 
 		# Quit
 		if [[ ${COMMAND} == "quit" ]]; then
-				echo '{ "command": ["quit"] }' | socat - /tmp/mpvsocket $1 > /dev/null
+				echo '{ "command": ["quit"] }' | socat - /tmp/mpvsocket > /dev/null
 				break
 		fi
 
 		# Seek
-		if [[ ${COMMAND} == "seek" ]]; then
-				echo "Seek:"
-				read SEEK
-				sed "s/SEEK/${SEEK}/g" <<< '{ "command": ["set_property", "playback-time", "SEEK"] }'  | socat - /tmp/mpvsocket > /dev/null
+		if [[ ${COMMAND} == *"seek"* ]]; then
+				sed "s/SEEK/$(echo ${COMMAND} | awk '{print $2}')/g" <<< '{ "command": ["set_property", "playback-time", "SEEK"] }'  | socat - /tmp/mpvsocket > /dev/null
 		fi
 
 done
