@@ -6,8 +6,10 @@
 # Usage:
 # 	music <command)
 # 	seek  <time>
-#	pause <yes/no>
-# 	loop  <yes/no>
+# 	advance (will advance music 5 seconds)
+# 	return (will return music 5 seconds)
+#	pause
+# 	loop
 # 	quit
 # 	stop
 # 	e.g music play hollow knight ost
@@ -19,17 +21,46 @@ COMMAND=$@
 run_command () {
 		# Quit / Stop
 		if [[ ${COMMAND} == "quit" || ${COMMAND} == "stop" ]]; then
-			echo '{ "command": ["quit"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+				echo '{ "command": ["quit"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 		fi
 
 		# Seek
 		if [[ ${COMMAND} == *"seek"* ]]; then
-			sed "s/SEEK/$(echo ${COMMAND} | awk '{print $2}')/g" <<< '{ "command": ["set_property", "playback-time", "SEEK"] }'  | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+				sed "s/SEEK/$(echo ${COMMAND} | awk '{print $2}')/g" <<< '{ "command": ["set_property", "playback-time", "SEEK"] }'  | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+		fi
+
+		# Advance
+		if [[ ${COMMAND} == "advance" ]]; then
+				echo '{ "command": ["seek", "+5"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+				echo "Advanced: 5 seconds"
+		fi
+
+		# Return
+		if [[ ${COMMAND} == "return" ]]; then
+				echo '{ "command": ["seek", "-5"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+				echo "Returned: 5 seconds"
 		fi
 
 		# Pause
 		if [[ ${COMMAND} == *"pause"* ]]; then
-			sed "s/STATE/$(echo ${COMMAND} | awk '{print $2}')/g" <<<'{ "command": ["set_property", "pause", "STATE"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+		
+				# Checks to determine if music will be paused or played
+				if [[ ! -f ${XDG_RUNTIME_DIR}/mpvpause ]]; then
+						PAUSE=yes
+				elif [[ $(cat ${XDG_RUNTIME_DIR}/mpvpause) == "yes" ]]; then
+						PAUSE=no
+				else
+						PAUSE=yes
+				fi
+
+				# Apply
+				sed "s/STATE/${PAUSE}/g" <<<'{ "command": ["set_property", "pause", "STATE"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+				
+				# Save pause state
+				echo ${PAUSE} > ${XDG_RUNTIME_DIR}/mpvpause
+
+				# Informs the user
+				echo "Pause: ${PAUSE}"
 		fi
 
 		# Play
@@ -39,14 +70,15 @@ run_command () {
 				if [[ $(pgrep -f mpv) ]]; then
 						killall mpv
 				fi
-				
+
+				# Remove the play word from the command
 				COMMAND=$(sed s/play//g <<< ${COMMAND})
 				
 				# Play song
 				if [[ ${COMMAND} != *"https"* ]]; then
 						mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket $(youtube-dl --get-url ytsearch:"${COMMAND}") &
 				else
-						mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvscoket ${COMMAND} &
+						mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket ${COMMAND} &
 				fi
 
 				# Wait for mpv start
@@ -60,9 +92,25 @@ run_command () {
 		
 		# Loop
 	    if [[ ${COMMAND} == *"loop"* ]]; then
-				sed "s/STATE/$(echo ${COMMAND} | awk '{print $2}')/g" <<<'{ "command": ["set_property", "loop", "STATE"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
-				LOOP=$(echo ${COMMAND} | awk '{print $2}')
+
+				# Conditions to determine if loop will be enabled or disabled
+				if [[ ! -f ${XDG_RUNTIME_DIR}/mpvloop ]]; then
+						LOOP=yes
+				elif [[ $(cat ${XDG_RUNTIME_DIR}/mpvloop) == "yes" ]]; then
+						LOOP=no
+				else
+						LOOP=yes
+				fi
+
+				# Apply
+				sed "s/STATE/${LOOP}/g" <<<'{ "command": ["set_property", "loop", "STATE"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+
+				# Save loop state
 				echo ${LOOP} > ${XDG_RUNTIME_DIR}/mpvloop
+				
+				# Informs the user
+				echo "Loop: ${LOOP}"
+
         fi
 }
 

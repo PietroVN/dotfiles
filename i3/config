@@ -26,6 +26,11 @@ font pango:monospace 8
 # screen before suspend. Use loginctl lock-session to lock your screen.
 exec_always --no-startup-id xss-lock --transfer-sleep-lock -- /usr/local/bin/lockscreen
 
+# Music
+bindsym XF86AudioPause exec --no-startup-id music pause
+bindsym XF86AudioNext exec --no-startup-id music advance
+bindsym XF86AudioPrev exec --no-startup-id music return
+
 # Volume
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
