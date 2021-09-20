@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Video name
+NAME=$@
+
+# Play video
+mpv --no-terminal --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket $(youtube-dl --get-url ytsearch:"${NAME}")

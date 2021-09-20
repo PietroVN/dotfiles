@@ -15,7 +15,7 @@ NAME=$@
 
 # Check if NAME is empty and if mpv is running
 if [[ -z ${NAME} ]]; then
-		if [[ ! $(pgrep mpv) ]]; then
+		if [[ ! $(pgrep -f mpv) ]]; then
 				echo "You need to enter a music name or link"
 				exit
 		fi
@@ -37,7 +37,7 @@ fi
 # Main Loop
 while true; do
 		echo "Receiving Commands:"
-		read COMMAND
+		read -r COMMAND
 
 		# Quit
 		if [[ ${COMMAND} == "quit" ]]; then
@@ -57,9 +57,11 @@ while true; do
 
 		# Play
 		if [[ ${COMMAND} == *"music"* ]]; then
-				
+
 				# End already running mpv process
-				killall mpv
+				if [[ $(pgrep -f mpv) ]]; then
+						killall mpv
+				fi
 				
 				COMMAND=$(sed s/music//g <<< ${COMMAND})
 				
@@ -73,11 +75,16 @@ while true; do
 				# Wait for mpv start
 				sleep 5
 
+				# Re-enable previous options
+				if [[ ${LOOP} == "yes" ]]; then
+						echo '{ "command": ["set_property", "loop", "yes"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+				fi
 		fi
 		
 		# Loop
-        if [[ ${COMMAND} == *"loop"* ]]; then
+	    if [[ ${COMMAND} == *"loop"* ]]; then
 				sed "s/STATE/$(echo ${COMMAND} | awk '{print $2}')/g" <<<'{ "command": ["set_property", "loop", "STATE"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+				LOOP=$(echo ${COMMAND} | awk '{print $2}')
         fi
 done
 
