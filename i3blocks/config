@@ -13,3 +13,8 @@ interval=300
 [wifi]
 command=echo "$(iwctl station wlan0 show | awk '/Connected network/{print $3,$4}')"
 interval=300
+
+#[speed]
+#command=echo "$(iwctl station wlan0 show | grep TxBitrate |awk '{print $2}' | tail -n3) | $(iwctl station wlan0 show | grep RxBitrate |awk '{print $2}' | tail -n3 )"
+#interval=1
+

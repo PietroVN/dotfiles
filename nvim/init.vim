@@ -10,6 +10,7 @@ Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'nvim-lua/completion-nvim'
+Plug 'cdelledonne/vim-cmake'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -49,6 +50,9 @@ let g:lightline = {
 \ 'colorscheme': 'onedark',
 \ }
 
+" CMake
+let g:cmake_build_dir_location = "./build"
+
 " Autostart NERDtree
 autocmd VimEnter * NERDTree
 
@@ -74,7 +78,7 @@ lua << EOF
 require 'lspconfig'.ccls.setup {
 	on_attach=require'completion'.on_attach,
 	init_options = {
-	   compilationDatabaseDirectory = "build",
+	   compilationDatabaseDirectory = "build/Debug",
 	},
 }
 -- Enable gdscript and set-up auto-complete 
