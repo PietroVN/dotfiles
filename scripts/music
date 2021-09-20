@@ -22,6 +22,7 @@ run_command () {
 		# Quit / Stop
 		if [[ ${COMMAND} == "quit" || ${COMMAND} == "stop" ]]; then
 				echo '{ "command": ["quit"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+				echo "Music stopped"
 		fi
 
 		# Seek
@@ -42,7 +43,7 @@ run_command () {
 		fi
 
 		# Pause
-		if [[ ${COMMAND} == *"pause"* ]]; then
+		if [[ ${COMMAND} == "pause" ]]; then
 		
 				# Checks to determine if music will be paused or played
 				if [[ ! -f ${XDG_RUNTIME_DIR}/mpvpause ]]; then
@@ -87,11 +88,12 @@ run_command () {
 				# Re-enable previous options
 				if [[ -f ${XDG_RUNTIME_DIR}/mpvloop && $(cat ${XDG_RUNTIME_DIR}/mpvloop) == "yes" ]]; then
 						echo '{ "command": ["set_property", "loop", "yes"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+						echo "Playing: ${COMMAND}"
 				fi
 		fi
 		
 		# Loop
-	    if [[ ${COMMAND} == *"loop"* ]]; then
+	    if [[ ${COMMAND} == "loop" ]]; then
 
 				# Conditions to determine if loop will be enabled or disabled
 				if [[ ! -f ${XDG_RUNTIME_DIR}/mpvloop ]]; then
