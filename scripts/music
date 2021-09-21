@@ -23,6 +23,7 @@ run_command () {
 		if [[ ${COMMAND} == "quit" || ${COMMAND} == "stop" ]]; then
 				echo '{ "command": ["quit"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 				echo "Music stopped"
+				rm ${XDG_RUNTIME_DIR}/mpvpause
 		fi
 
 		# Seek
@@ -66,6 +67,11 @@ run_command () {
 
 		# Play
 		if [[ ${COMMAND} == *"play"* ]]; then
+		
+				# Delete mpvsocket
+				if [[ -f ${XDG_RUNTIME_DIR}/mpvsocket ]]; then
+						rm ${XDG_RUNTIME_DIR}/mpvsocket
+				fi
 
 				# End already running mpv process
 				if [[ $(pgrep -f mpv) ]]; then
@@ -83,13 +89,15 @@ run_command () {
 				fi
 
 				# Wait for mpv start
-				sleep 5
+				sleep 7
 
 				# Re-enable previous options
 				if [[ -f ${XDG_RUNTIME_DIR}/mpvloop && $(cat ${XDG_RUNTIME_DIR}/mpvloop) == "yes" ]]; then
 						echo '{ "command": ["set_property", "loop", "yes"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
-						echo "Playing: ${COMMAND}"
 				fi
+				
+				# Informs the user
+				echo "Playing: ${COMMAND}"
 		fi
 		
 		# Loop
