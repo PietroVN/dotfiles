@@ -23,7 +23,12 @@ run_command () {
 		if [[ ${COMMAND} == "quit" || ${COMMAND} == "stop" ]]; then
 				echo '{ "command": ["quit"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 				echo "Music stopped"
-				rm ${XDG_RUNTIME_DIR}/mpvpause
+				if [[ -f ${XDG_RUNTIME_DIR}/mpvpause ]]; then
+						rm ${XDG_RUNTIME_DIR}/mpvpause
+				fi
+				if [[ -f ${XDG_RUNTIME_DIR}/mpvloop ]]; then
+						rm ${XDG_RUNTIME_DIR}/mpvloop
+				fi
 		fi
 
 		# Seek
