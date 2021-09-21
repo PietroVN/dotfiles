@@ -4,7 +4,7 @@
 # By: PietroVN
 # Requirements: youtube-dl, mpv, socat
 # Usage:
-# 	music <command)
+# 	music <command>
 # 	seek  <time>
 # 	advance (will advance music 5 seconds)
 # 	return (will return music 5 seconds)
@@ -89,7 +89,7 @@ run_command () {
 				fi
 
 				# Wait for mpv start
-				sleep 7
+				sleep 5
 
 				# Re-enable previous options
 				if [[ -f ${XDG_RUNTIME_DIR}/mpvloop && $(cat ${XDG_RUNTIME_DIR}/mpvloop) == "yes" ]]; then
