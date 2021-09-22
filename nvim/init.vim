@@ -15,6 +15,7 @@ call plug#end()
 
 " Set tabstop to 4 spaces
 set tabstop=4
+set shiftwidth=4
 
 " Custom colors
 let g:onedark_color_overrides = {

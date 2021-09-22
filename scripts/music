@@ -94,7 +94,9 @@ run_command () {
 				fi
 
 				# Wait for mpv start
-				sleep 5
+				while [[ ! $(pgrep -f mpv) ]]; do
+					sleep 1
+				done
 
 				# Re-enable previous options
 				if [[ -f ${XDG_RUNTIME_DIR}/mpvloop && $(cat ${XDG_RUNTIME_DIR}/mpvloop) == "yes" ]]; then
@@ -102,7 +104,8 @@ run_command () {
 				fi
 				
 				# Informs the user
-				echo "Playing: ${COMMAND}"
+				echo "Now playing:    $(youtube-dl --get-title ytsearch:"${COMMAND}")"
+				echo "Music Duration: $(youtube-dl --get-duration ytsearch:"${COMMAND}")"
 		fi
 		
 		# Loop
