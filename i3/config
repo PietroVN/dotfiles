@@ -59,8 +59,8 @@ bindsym $mod+t exec --no-startup-id i3-sensible-terminal
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# Rofi menu
-bindsym $mod+Return exec --no-startup-id rofi -show run
+# Dmenu menu
+bindsym $mod+Return exec --no-startup-id dmenu_run -nb black -nf purple
 
 # Screenshot
 bindsym $mod+p exec --no-startup-id maim -o  | xclip -select clipboard -target image/png

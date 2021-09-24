@@ -58,6 +58,6 @@ if [[ ${DELETE_SNAPSHOT} -eq "1" ]]; then
         echo "Reloading grub"
         sudo grub-mkconfig -o /boot/grub/grub.cfg
 elif [[ ${DELETE_SNAPSHOT} -eq "2" ]]; then
-        sudo rm -rf "${SNAPSHOT_PATH}/${SNAPSHOT_NAME}"
+        sudo rm -rf "${SNAPSHOT_DIR}/${SNAPSHOT_NAME}"
         echo "Snapshot deleted"
 fi
