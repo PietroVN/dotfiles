@@ -1,0 +1,3 @@
+VIDEO="/home/pietrovn/Wallpapers/animated/WatchingTheUniverse.webm"
+
+mpv --no-input-cursor --no-osc --no-osd-bar --no-input-default-bindings --cursor-autohide=no --wid=0 --really-quiet --loop=yes --framedrop=vo --no-audio --panscan="1.0" ${VIDEO}
