@@ -7,7 +7,7 @@ echo ""
 
 echo "Mode"
 echo "1 - Snapshot"
-#echo "2 - Compile package & install deps"
+echo "2 - Snapshot with /home"
 read MODE
 echo ""
 
@@ -20,8 +20,12 @@ SNAPSHOT_DIR=/.snapshots
 
 echo "Creating snapshot"
 sudo btrfs subvol snapshot "/" "${SNAPSHOT_DIR}/${SNAPSHOT_NAME}"
-rm -rf "${SNAPSHOT_DIR}/${SNAPSHOT_NAME}/home"
-sudo btrfs subvol snapshot "/home" "${SNAPSHOT_DIR}/${SNAPSHOT_NAME}/home"
+
+if [[ ${MODE} -eq "2" ]]; then
+	rm -rf "${SNAPSHOT_DIR}/${SNAPSHOT_NAME}/home"
+	sudo btrfs subvol snapshot "/home" "${SNAPSHOT_DIR}/${SNAPSHOT_NAME}/home"
+fi
+
 echo ""
 
 # Ask to save snapshot

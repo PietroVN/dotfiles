@@ -1,10 +1,23 @@
 #!/usr/bin/env bash
 
-# Create a screenshot
-maim > ~/.screenlock.png
 
-# Blur screenshot
-convert ~/.screenlock.png -filter Gaussian -blur 0x8 ~/.screenlock.png
+if [[ $(pgrep -f i3) ]]; then 
+	# Create a screenshot
+	maim > ~/.screenlock.png
 
-# i3lock
-i3lock -i ~/.screenlock.png
+	# Blur screenshot
+	convert ~/.screenlock.png -filter Gaussian -blur 0x8 ~/.screenlock.png
+
+	# i3lock
+	if [[ $(pgrep -f i3) ]]; then i3lock -i ~/.screenlock.png; fi
+elif [[ $(pgrep -f sway) ]]; then
+	# Create screenshot
+	grim  ~/.screenlock.png
+
+	# Blur screenshot
+	convert ~/.screenlock.png -filter Gaussian -blur 0x8 ~/.screenlock.png
+
+	# swaylock
+	if [[ $(pgrep -f sway) ]]; then swaylock -i ~/.screenlock.png; fi
+
+fi
