@@ -26,9 +26,9 @@ run_command () {
 				if [[ -f ${XDG_RUNTIME_DIR}/mpvpause ]]; then
 						rm ${XDG_RUNTIME_DIR}/mpvpause
 				fi
-				if [[ -f ${XDG_RUNTIME_DIR}/mpvloop ]]; then
-						rm ${XDG_RUNTIME_DIR}/mpvloop
-				fi
+				#if [[ -f ${XDG_RUNTIME_DIR}/mpvloop ]]; then
+				#		rm ${XDG_RUNTIME_DIR}/mpvloop
+				#fi
 		fi
 
 		# Seek

@@ -50,7 +50,7 @@ let g:lightline = {
 \ }
 
 " Autostart NERDtree
-autocmd VimEnter * NERDTree
+"autocmd VimEnter * NERDTree
 
 " Treesitter
 lua <<EOF

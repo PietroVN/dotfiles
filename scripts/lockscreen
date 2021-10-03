@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 if [[ $(pgrep -f i3) ]]; then 
 	# Create a screenshot
 	maim > ~/.screenlock.png
@@ -10,6 +9,7 @@ if [[ $(pgrep -f i3) ]]; then
 
 	# i3lock
 	if [[ $(pgrep -f i3) ]]; then i3lock -i ~/.screenlock.png; fi
+
 elif [[ $(pgrep -f sway) ]]; then
 	# Create screenshot
 	grim  ~/.screenlock.png

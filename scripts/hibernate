@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Lock screen
-sh /usr/local/bin/lockscreen
+#lockscreen
 
 # Hibernate
 systemctl hibernate
