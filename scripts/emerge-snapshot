@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "######################"
-echo "Pacman Snapshot Script"
+echo "Emerge Snapshot Script"
 echo "######################"
 echo ""
 
@@ -23,6 +23,20 @@ echo ""
 # Correct package names
 if [[ ${MODE} -ne "3" && ${MODE} -ne "4" ]]; then PACKAGES_CORRECTED=$(sed "s/ /-/g" <<< ${PACKAGES}); fi
 
+# Single package (WORKAROUND)
+if [[ ${MODE} -ne "3" && ${MODE} -ne "4" ]]; then
+	echo "Installing single package?"
+	echo "1 - Yes"
+	echo "2 - No"
+	read SINGLE_PACKAGE
+	echo ""
+	
+	if [[ ${SINGLE_PACKAGE} -eq "1" ]]; then 
+		PACKAGES_CORRECTED=${PACKAGES}
+		echo "You choose single package"
+	fi
+fi
+
 # Snapshot name
 if [[ ${MODE} -eq "1" ]]; then SNAPSHOT_NAME=$(date +%d_%m_%Y-%H-%M)-install-${PACKAGES_CORRECTED}
 elif [[ ${MODE} -eq "2" ]]; then SNAPSHOT_NAME=$(date +%d_%m_%Y-%H-%M)-remove-${PACKAGES_CORRECTED}
@@ -33,21 +47,24 @@ else SNAPSHOT_NAME=$(date +%d_%m_%Y-%H-%M)-database-update; fi
 SNAPSHOT_PATH=/.snapshots
 
 # Snapshot
-btrfs subvol snapshot "/" "${SNAPSHOT_PATH}/${SNAPSHOT_NAME}"
+#btrfs subvol snapshot "/" "${SNAPSHOT_PATH}/${SNAPSHOT_NAME}"
 
 # Install
 if [[ ${MODE} -eq "1" ]]; then
-	pacman -S ${PACKAGES}
+	emerge ${PACKAGES}
+fi
 # Remove
-elif [[ ${MODE} -eq "2" ]]; then
+#elif [[ ${MODE} -eq "2" ]]; then
 	pacman -R ${PACKAGES}
 # Update
-elif [[ ${MODE} -eq "3" ]]; then
-	pacman -Syu
-else 
-	pacman -Fy
-	pacman -Sy
-fi
+#elif [[ ${MODE} -eq "3" ]]; then
+#	pacman -Syu
+#else 
+#	pacman -Fy
+#	pacman -Sy
+#fi
+
+echo ${SNAPSHOT_NAME}
 
 # Ask to save snapshot
 echo "You want to delete snapshot?"
