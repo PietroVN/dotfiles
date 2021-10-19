@@ -9,6 +9,7 @@
 
 window#waybar {
     background-color: rgba(0,0,0,0.5);
+    color: #7121c2;
     border-bottom: 3px solid rgba(100, 114, 125, 0.3);
     transition-property: background-color;
     transition-duration: .5s;
@@ -21,11 +22,11 @@ window#waybar.hidden {
 /*
 window#waybar.empty {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 window#waybar.solo {
     background-color: #FFFFFF;
-    color: #ffffff;
+    color: #7121c2;
 }
 */
 
@@ -41,7 +42,7 @@ window#waybar.chromium {
 #workspaces button {
     padding: 0 5px;
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
     /* Use box-shadow instead of border so the text isn't offset */
     box-shadow: inset 0 -3px transparent;
 }
@@ -101,29 +102,29 @@ window#waybar.chromium {
 
 #clock {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #battery {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #battery.charging, #battery.plugged {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 @keyframes blink {
     to {
         background-color: transparent;
-	color: #ffffff;
+	color: #7121c2;
     }
 }
 
 #battery.critical:not(.charging) {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
     animation-name: blink;
     animation-duration: 0.5s;
     animation-timing-function: linear;
@@ -133,78 +134,78 @@ window#waybar.chromium {
 
 label:focus {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #cpu {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #memory {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #disk {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #backlight {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #network {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #network.disconnected {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #pulseaudio {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #pulseaudio.muted {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #custom-media {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
     min-width: 100px;
 }
 
 #custom-media.custom-spotify {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #custom-media.custom-vlc {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #temperature {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #temperature.critical {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #tray {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #tray > .passive {
@@ -214,42 +215,42 @@ label:focus {
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
     background-color: transparent;
-    color: #ffffff;
+    color:  #7121c2;
 }
 
 #idle_inhibitor {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #idle_inhibitor.activated {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #mpd {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #mpd.disconnected {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #mpd.stopped {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #mpd.paused {
     background-color: transparent;
-    color: #ffffff;
+    color: #7121c2;
 }
 
 #language {
     background: transparent;
-    color: #ffffff;
+    color: #7121c2;
     padding: 0 5px;
     margin: 0 5px;
     min-width: 16px;
@@ -257,7 +258,7 @@ label:focus {
 
 #keyboard-state {
     background: transparent;
-    color: #ffffff;
+    color: #7121c2;
     padding: 0 0px;
     margin: 0 5px;
     min-width: 16px;
@@ -269,5 +270,5 @@ label:focus {
 
 #keyboard-state > label.locked {
     background: rgba(0, 0, 0, 0.2);
-    color: #ffffff;
+    color: #7121c2;
 }

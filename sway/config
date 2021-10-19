@@ -7,11 +7,11 @@ exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
 
-# Terminal (Alacritty)
-set $term alacritty
+# Terminal (Kitty)
+set $term kitty
 
 # Launcher (Bemenu)
-set $menu bemenu-run -n  | xargs swaymsg exec --
+set $menu bemenu-run -n -nf "#7121c2" --tf "#7121c2" --hf "#8e4dff"  | xargs swaymsg exec --
 
 ### Output configuration
 #
@@ -234,11 +234,12 @@ smart_borders on
 
 # Animated wallpaper (mpvpaper)
 exec_always --no-startup-id killall mpvpaper
-exec_always --no-startup-id mpvpaper -o "loop=yes no-audio framedrop=vo" eDP-1 /home/pietrovn/Wallpapers/animated/WatchingTheUniverse.webm
-#exec_always --no-startup-id mpvpaper -o "loop=yes no-audio framedrop=vo" eDP-1 /home/pietrovn/Wallpapers/animated/montanha_be_like-export-export.gif
+exec_always --no-startup-id mpvpaper -o "loop=yes no-audio framedrop=vo" eDP-1 /home/pietrovn/wallpapers/animated/WatchingTheUniverse.mp4
+#exec_always --no-startup-id mpvpaper -o "loop=yes no-audio framedrop=vo" eDP-1 /home/pietrovn/wallpapers/animated/teper/montanha_be_like-export.gif
 
 # Lockscreen 
 exec_always --no-startup-id swayidle -w timeout 100 "lockscreen"
+exec_always --no-startup-id swayidle -w lock "lockscreen"
 
 # Suspend
 exec_always --no-startup-id swayidle -w timeout 300  "systemctl suspend-then-hibernate"
