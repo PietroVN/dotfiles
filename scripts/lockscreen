@@ -33,6 +33,6 @@ elif [[ $(pgrep -f sway) ]]; then
 	convert ~/.screenlock.png -filter Gaussian -blur 0x8 ~/.screenlock.png
 
 	# swaylock
-	if [[ $(pgrep -f sway) ]]; then swaylock -i ~/.screenlock.png; fi
+	if [[ $(pgrep -f swaylock) ]]; then swaylock -i ~/.screenlock.png; fi
 
 fi

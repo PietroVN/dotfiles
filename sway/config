@@ -207,7 +207,8 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Touchpad
-input "1739:33364:Synaptics_TM3336-004" {
+#input "1739:33364:Synaptics_TM3336-004" {
+input "1267:226:Elan_Touchpad" {
         tap enabled
 }
 
@@ -231,10 +232,11 @@ smart_borders on
 
 # Wallpaper
 #output * bg /home/pietrovn/Wallpapers/own/PurpleVibe.png stretch
+output * bg /home/pietrovn/wallpapers/WatchingTheUniverse.png stretch
 
 # Animated wallpaper (mpvpaper)
 exec_always --no-startup-id killall mpvpaper
-exec_always --no-startup-id mpvpaper -o "loop=yes no-audio framedrop=vo" eDP-1 /home/pietrovn/wallpapers/animated/WatchingTheUniverse.mp4
+#exec_always --no-startup-id mpvpaper -o "loop=yes no-audio framedrop=vo" eDP-1 /home/pietrovn/wallpapers/animated/WatchingTheUniverse.mp4
 #exec_always --no-startup-id mpvpaper -o "loop=yes no-audio framedrop=vo" eDP-1 /home/pietrovn/wallpapers/animated/teper/montanha_be_like-export.gif
 
 # Lockscreen 
@@ -255,5 +257,8 @@ bar {
     position top
     swaybar_command waybar
 }
+
+# Mako (Notification Daemon)
+exec_always mako
 
 include @sysconfdir@/sway/config.d/*
