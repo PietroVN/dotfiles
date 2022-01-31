@@ -1,26 +1,18 @@
 #!/usr/bin/env bash
+YT=yt-dlp
 
-echo "##########"
-echo "Youtube-DL"
-echo "##########"
-echo ""
-echo "Video|Audio link: "
+echo "Video/Song link: "
 read LINK
 echo ""
 
-echo "Download:"
-echo "1 - Music"
+echo "1 - Audio only"
 echo "2 - Video"
 read DOWNLOAD
 echo ""
 
-echo "Download Playlist:"
-echo "1 - Yes"
-echo "2 - No"
-read PLAYLIST
-echo ""
+echo "Category:"
+read CATEGORY
 
 if [[ ${DOWNLOAD} -eq "1" ]]; then
-	if [[ ${PLAYLIST} -eq "1" ]]; then youtube-dl -x --audio-format opus --audio-quality 0 --yes-playlist ${LINK} -o '~/Musics/%(channel)s/%(playlist)s/%(title)s.%(ext)s'; fi
-	if [[ ${PLAYLIST} -eq "2" ]]; then youtube-dl -x --audio-format opus --audio-quality 0 --no-playlist  ${LINK} -o '~/Musics/%(channel)s/%(playlist)s/%(title)s.%(ext)s'; fi
+	${YT} -x --audio-format wav --audio-quality 0 --yes-playlist ${LINK} --restrict-filenames -o "~/musics/${CATEGORY}/%(playlist)s/%(title)s.%(ext)s"
 fi

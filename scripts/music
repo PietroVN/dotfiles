@@ -5,6 +5,13 @@
 # Requirements: youtube-dl (Play songs from links), mpv (Playing songs), socat (Sending commands to mpv)
 # Usage:
 # 	music <command>
+#	play <song name>
+#	play LOCAL:<path to file>
+#	play FOLDER:<full path to folder> (Basically playlist)
+#	play URL:<url>
+#	play SEARCH:<song to search>
+#	next
+#	prev
 # 	seek  <time>
 # 	advance (will advance music 5 seconds)
 # 	return (will return music 5 seconds)
@@ -17,6 +24,9 @@
 # get args (music name | command)
 COMMAND=$@
 
+# Youtube (Youtube downloader)
+YT=$(ls /usr/bin | grep yt-)
+
 # Commands
 run_command () {
 		# Quit / Stop
@@ -26,6 +36,15 @@ run_command () {
 				if [[ -f ${XDG_RUNTIME_DIR}/mpvpause ]]; then
 					rm ${XDG_RUNTIME_DIR}/mpvpause
 				fi
+		fi
+
+		# Info
+		if [[ ${COMMAND} == "info" ]]; then
+			if [[ $(cat ${XDG_RUNTIME_DIR}/mode) == *"LOCAL"* ]]; then
+				echo "Music Name: $(basename $(echo '{ "command": ["get_property", "path"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket) | sed 's/\".*//')"
+			else
+				echo "Now Playing:    $(cat ${XDG_RUNTIME_DIR}/name)"
+			fi
 		fi
 
 		# Seek
@@ -39,15 +58,26 @@ run_command () {
 			echo "Advanced: 5 seconds"
 		fi
 
+		# Next
+		if [[ ${COMMAND} == "next" ]]; then
+			echo 'playlist-next' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+			echo "Music skipped"
+		fi
+
 		# Return
 		if [[ ${COMMAND} == "return" ]]; then
 			echo '{ "command": ["seek", "-5"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 			echo "Returned: 5 seconds"
 		fi
 
+		# Prev
+		if [[ ${COMMAND} == "prev" || ${COMMAND} == "previous" ]]; then
+			echo 'playlist-prev' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+			echo "Returning to previous song"
+		fi
+
 		# Pause
 		if [[ ${COMMAND} == "pause" ]]; then
-		
 				# Checks to determine if music will be paused or played
 				if [[ ! -f ${XDG_RUNTIME_DIR}/mpvpause ]]; then
 					PAUSE=yes
@@ -59,7 +89,7 @@ run_command () {
 
 				# Apply
 				sed "s/STATE/${PAUSE}/g" <<<'{ "command": ["set_property", "pause", "STATE"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
-				
+
 				# Save pause state
 				echo ${PAUSE} > ${XDG_RUNTIME_DIR}/mpvpause
 
@@ -69,7 +99,6 @@ run_command () {
 
 		# Play
 		if [[ ${COMMAND} == *"play"* ]]; then
-		
 				# Delete mpvsocket
 				if [[ -f ${XDG_RUNTIME_DIR}/mpvsocket ]]; then
 					rm ${XDG_RUNTIME_DIR}/mpvsocket
@@ -80,48 +109,98 @@ run_command () {
 						killall mpv
 				fi
 
+				# Delete previous mode
+				if [[ -f ${XDG_RUNTIME_DIR}/mode ]]; then
+					rm ${XDG_RUNTIME_DIR}/mode
+				fi
+
+				# Delete previous name
+				if [[ -f ${XDG_RUNTIME_DIR}/name ]]; then
+					rm ${XDG_RUNTIME_DIR}/name
+				fi
+
 				# Remove the play word from the command
 				COMMAND=$(sed s/play//g <<< ${COMMAND})
-				
+
 				# Check if user is using song name or url
-				if [[ ${COMMAND} !=  *"https"* ]]; then
-						SEARCH_MODE=NAME
+				if [[ ${COMMAND} == *"LOCAL:"* ]]; then
+						MODE=LOCAL_FILE
+				elif [[ ${COMMAND} == *"FOLDER:"* ]]; then
+						MODE=LOCAL_FOLDER
+				elif [[ ${COMMAND} ==  *"URL:"* ]]; then
+						MODE=URL
 				else
-						SEARCH_MODE=URL
+						MODE=SEARCH
 				fi
 
-				# Play song
-				if [[ ${SEARCH_MODE} == "NAME" ]]; then
-					mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket $(youtube-dl --get-url ytsearch:"${COMMAND}") &
-				else
+				# Remove the LOCAL: from command
+				COMMAND=$(sed s/LOCAL://g <<< ${COMMAND})
+				COMMAND=$(sed s/FOLDER://g <<< ${COMMAND})
+				COMMAND=$(sed s/SEARCH://g <<< ${COMMAND})
+				COMMAND=$(sed s/URL://g <<< ${COMMAND})
+
+				if [[ ${MODE} == "LOCAL_FILE" ]]; then
+
+					# Play song
 					mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket ${COMMAND} &
+
+					# Save mode
+					echo "LOCAL_FILE" >> ${XDG_RUNTIME_DIR}/mode
+
+				elif [[ ${MODE} == "LOCAL_FOLDER" ]]; then
+
+					# Delete previous tmp playlist
+					if [[ -f ${XDG_RUNTIME_DIR}/tmp_playlist.txt ]]; then rm ${XDG_RUNTIME_DIR}/tmp_playlist.txt; fi
+
+					# Generate a tmp playlist with files listed on directory
+					for f in ${COMMAND}/*; do echo ${f} >> ${XDG_RUNTIME_DIR}/tmp_playlist.txt; done
+
+					# Play playlist
+					mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket --playlist=${XDG_RUNTIME_DIR}/tmp_playlist.txt &
+
+					# Save mpde
+					echo "LOCAL_FOLDER" >> ${XDG_RUNTIME_DIR}/mode
+
+				elif [[ ${MODE} == "SEARCH" ]]; then
+
+					# Play song
+					mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket $(${YT} --get-url ytsearch:"${COMMAND}") &
+
+					# Save mode
+					echo "SEARCH" >> ${XDG_RUNTIME_DIR}/mode
+					echo "$(${YT} --get-title "ytsearch:${COMMAND}")" >> ${XDG_RUNTIME_DIR}/name
+				else
+					# Play song
+					mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket ${COMMAND} &
+
+					# Save name
+					echo "URL" >> ${XDG_RUNTIME_DIR}/mode
+					echo "$(${YT} --get-title ${COMMAND})" >> ${XDG_RUNTIME_DIR}/name
 				fi
 
-				# Wait for mpv start
-				sleep 5
+				# Wait mpvsocket start listening
+				sleep 3
 
 				# Re-enable previous options
 				if [[ -f ${XDG_RUNTIME_DIR}/mpvloop && $(cat ${XDG_RUNTIME_DIR}/mpvloop) == "yes" ]]; then
 					echo '{ "command": ["set_property", "loop", "yes"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 				fi
-				
-				# Informs the user
-				if [[ ${SEARCH_MODE} == "NAME" ]]; then
-					echo "Now playing:    $(youtube-dl --get-title ytsearch:"${COMMAND}")"
-					echo "Music Duration: $(youtube-dl --get-duration ytsearch:"${COMMAND}")"
-				else
-					echo "Now playing:    $(youtube-dl --get-title ${COMMAND})"
-					echo "Music Duration: $(youtube-dl --get-duration ${COMMAND})"
-				fi
 
-				# Set music name (I'll use this to integrate with neofetch)
-				if [[ ${SEARCH_MODE} == "NAME" ]]; then
-					sed "s/NAME/$(youtube-dl --get-title ytsearch:"${COMMAND}")/g" <<<'{ "command": ["set_property", "name", "NAME"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+				# Informs the user
+				if [[ ${MODE} == "SEARCH" ]]; then
+					echo "Now Playing:    $(${YT} --get-title ytsearch:"${COMMAND}")"
+					echo "Music Duration: $(${YT} --get-duration ytsearch:"${COMMAND}")"
+				elif [[ ${MODE} == "URL" ]]; then
+					echo "Now Playing:    $(${YT} --get-title ${COMMAND})"
+					echo "Music Duration: $(${YT} --get-duration ${COMMAND})"
+				elif [[ ${MODE} == "LOCAL_FOLDER" ]]; then
+					echo "Playlist size: $(ls ${COMMAND}/ | wc -l)"
+					echo "Now Playing: $(basename $(echo '{ "command": ["get_property", "path"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket) | sed 's/\".*//')"
 				else
-					sed "s/NAME/$(youtube-dl --get-title ${COMMAND})/g" <<<'{ "command": ["set_property", "name", "NAME"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
+					echo "Now Playing: $(basename ${COMMAND})"
 				fi
 		fi
-		
+
 		# Loop
 	    if [[ ${COMMAND} == "loop" ]]; then
 
@@ -139,7 +218,7 @@ run_command () {
 
 				# Save loop state
 				echo ${LOOP} > ${XDG_RUNTIME_DIR}/mpvloop
-				
+
 				# Informs the user
 				echo "Loop: ${LOOP}"
 
