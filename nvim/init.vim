@@ -4,11 +4,6 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 " Declare the list of plugins.
 Plug 'itchyny/lightline.vim'
 Plug 'joshdick/onedark.vim'
-Plug 'ryanoasis/vim-devicons'
-Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}  " We recommend updating the parsers on update
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -49,15 +44,3 @@ let g:lightline = {
 \ 'colorscheme': 'onedark',
 \ }
 
-" Autostart NERDtree
-"autocmd VimEnter * NERDTree
-
-" Treesitter
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-    highlight = { enable = true },
-    incremental_selection = { enable = true },
-    textobjects = { enable = true },
-    indent = { enable = true },
-}
-EOF

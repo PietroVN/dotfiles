@@ -6,7 +6,7 @@
 # Usage:
 # 	music <command>
 #	play <song name>
-#	play LOCAL:<path to file>
+#	play FILE:<path to file>
 #	play FOLDER:<full path to folder> (Basically playlist)
 #	play URL:<url>
 #	play SEARCH:<song to search>
@@ -33,9 +33,7 @@ run_command () {
 		if [[ ${COMMAND} == "quit" || ${COMMAND} == "stop" ]]; then
 				echo '{ "command": ["quit"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket > /dev/null
 				echo "Music stopped"
-				if [[ -f ${XDG_RUNTIME_DIR}/mpvpause ]]; then
-					rm ${XDG_RUNTIME_DIR}/mpvpause
-				fi
+				[[ -f "${XDG_RUNTIME_DIR}/mpvpause" ]] && rm "${XDG_RUNTIME_DIR}/mpvpause"
 		fi
 
 		# Info
@@ -100,30 +98,25 @@ run_command () {
 		# Play
 		if [[ ${COMMAND} == *"play"* ]]; then
 				# Delete mpvsocket
-				if [[ -f ${XDG_RUNTIME_DIR}/mpvsocket ]]; then
-					rm ${XDG_RUNTIME_DIR}/mpvsocket
-				fi
+				[[ -f "${XDG_RUNTIME_DIR}/mpvsocket" ]] && rm "${XDG_RUNTIME_DIR}/mpvsocket"
 
 				# End already running mpv process
-				if [[ $(pidof mpv) ]]; then
-						killall mpv
-				fi
+				[[ $(pidof mpv) ]] && killall "mpv"
 
 				# Delete previous mode
-				if [[ -f ${XDG_RUNTIME_DIR}/mode ]]; then
-					rm ${XDG_RUNTIME_DIR}/mode
-				fi
+				[[ -f ${XDG_RUNTIME_DIR}/mode ]] && rm "${XDG_RUNTIME_DIR}/mode"
 
 				# Delete previous name
-				if [[ -f ${XDG_RUNTIME_DIR}/name ]]; then
-					rm ${XDG_RUNTIME_DIR}/name
-				fi
+				[[ -f ${XDG_RUNTIME_DIR}/name ]] && rm "${XDG_RUNTIME_DIR}/name"
+
+				# Playlist shuffle
+				[[ ${COMMAND} ==  *"--shuffle"* ]] && SHUFFLE=true
 
 				# Remove the play word from the command
 				COMMAND=$(sed s/play//g <<< ${COMMAND})
 
 				# Check if user is using song name or url
-				if [[ ${COMMAND} == *"LOCAL:"* ]]; then
+				if [[ ${COMMAND} == *"FILE:"* ]]; then
 						MODE=LOCAL_FILE
 				elif [[ ${COMMAND} == *"FOLDER:"* ]]; then
 						MODE=LOCAL_FOLDER
@@ -138,6 +131,7 @@ run_command () {
 				COMMAND=$(sed s/FOLDER://g <<< ${COMMAND})
 				COMMAND=$(sed s/SEARCH://g <<< ${COMMAND})
 				COMMAND=$(sed s/URL://g <<< ${COMMAND})
+				COMMAND=$(sed s/--shuffle//g <<< ${COMMAND})
 
 				if [[ ${MODE} == "LOCAL_FILE" ]]; then
 
@@ -150,13 +144,14 @@ run_command () {
 				elif [[ ${MODE} == "LOCAL_FOLDER" ]]; then
 
 					# Delete previous tmp playlist
-					if [[ -f ${XDG_RUNTIME_DIR}/tmp_playlist.txt ]]; then rm ${XDG_RUNTIME_DIR}/tmp_playlist.txt; fi
+					[[ -f "${XDG_RUNTIME_DIR}/tmp_playlist.txt" ]] && rm "${XDG_RUNTIME_DIR}/tmp_playlist.txt"
 
 					# Generate a tmp playlist with files listed on directory
 					for f in ${COMMAND}/*; do echo ${f} >> ${XDG_RUNTIME_DIR}/tmp_playlist.txt; done
 
 					# Play playlist
-					mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket --playlist=${XDG_RUNTIME_DIR}/tmp_playlist.txt &
+					[[ ! "${SHUFFLE}" ]] && mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket --playlist=${XDG_RUNTIME_DIR}/tmp_playlist.txt &
+					[[   "${SHUFFLE}" ]] && mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket --shuffle  --playlist=${XDG_RUNTIME_DIR}/tmp_playlist.txt &
 
 					# Save mpde
 					echo "LOCAL_FOLDER" >> ${XDG_RUNTIME_DIR}/mode
