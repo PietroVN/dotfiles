@@ -127,7 +127,7 @@ run_command () {
 				fi
 
 				# Remove the LOCAL: from command
-				COMMAND=$(sed s/LOCAL://g <<< ${COMMAND})
+				COMMAND=$(sed s/FILE://g <<< ${COMMAND})
 				COMMAND=$(sed s/FOLDER://g <<< ${COMMAND})
 				COMMAND=$(sed s/SEARCH://g <<< ${COMMAND})
 				COMMAND=$(sed s/URL://g <<< ${COMMAND})
