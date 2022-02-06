@@ -8,6 +8,7 @@
 #	play <song name>
 #	play FILE:<path to file>
 #	play FOLDER:<full path to folder> (Basically playlist)
+# 	play PLAYLIST:<full path to txt file>
 #	play URL:<url>
 #	play SEARCH:<song to search>
 #	next
@@ -26,6 +27,7 @@ COMMAND=$@
 
 # Youtube (Youtube downloader)
 YT=$(ls /usr/bin | grep yt-)
+MUSICS_FOLDER=~/musics
 
 # Commands
 run_command () {
@@ -41,7 +43,7 @@ run_command () {
 			if [[ $(cat ${XDG_RUNTIME_DIR}/mode) == *"LOCAL"* ]]; then
 				echo "Music Name: $(basename $(echo '{ "command": ["get_property", "path"] }' | socat - ${XDG_RUNTIME_DIR}/mpvsocket) | sed 's/\".*//')"
 			else
-				echo "Now Playing:    $(cat ${XDG_RUNTIME_DIR}/name)"
+				echo "Music name:    $(cat ${XDG_RUNTIME_DIR}/name)"
 			fi
 		fi
 
@@ -116,21 +118,18 @@ run_command () {
 				COMMAND=$(sed s/play//g <<< ${COMMAND})
 
 				# Check if user is using song name or url
-				if [[ ${COMMAND} == *"FILE:"* ]]; then
-						MODE=LOCAL_FILE
-				elif [[ ${COMMAND} == *"FOLDER:"* ]]; then
-						MODE=LOCAL_FOLDER
-				elif [[ ${COMMAND} ==  *"URL:"* ]]; then
-						MODE=URL
-				else
-						MODE=SEARCH
-				fi
+				[[ ${COMMAND} == *"FILE:"*     ]] && MODE=LOCAL_FILE
+				[[ ${COMMAND} == *"FOLDER:"*   ]] && MODE=LOCAL_FOLDER
+				[[ ${COMMAND} == *"PLAYLIST:"* ]] && MODE=LOCAL_PLAYLIST
+				[[ ${COMMAND} == *"URL:"*      ]] && MODE=URL
+				[[ ${COMMAND} == *"SEARCH:"*   ]] && MODE=SEARCH
 
 				# Remove the LOCAL: from command
-				COMMAND=$(sed s/FILE://g <<< ${COMMAND})
-				COMMAND=$(sed s/FOLDER://g <<< ${COMMAND})
-				COMMAND=$(sed s/SEARCH://g <<< ${COMMAND})
-				COMMAND=$(sed s/URL://g <<< ${COMMAND})
+				COMMAND=$(sed s/FILE://g <<<     ${COMMAND})
+				COMMAND=$(sed s/FOLDER://g <<<   ${COMMAND})
+				COMMAND=$(sed s/SEARCH://g <<<   ${COMMAND})
+				COMMAND=$(sed s/URL://g <<<      ${COMMAND})
+				COMMAND=$(sed s/PLAYLIST://g <<< ${COMMAND})
 				COMMAND=$(sed s/--shuffle//g <<< ${COMMAND})
 
 				if [[ ${MODE} == "LOCAL_FILE" ]]; then
@@ -147,7 +146,22 @@ run_command () {
 					[[ -f "${XDG_RUNTIME_DIR}/tmp_playlist.txt" ]] && rm "${XDG_RUNTIME_DIR}/tmp_playlist.txt"
 
 					# Generate a tmp playlist with files listed on directory
-					for f in ${COMMAND}/*; do echo ${f} >> ${XDG_RUNTIME_DIR}/tmp_playlist.txt; done
+					for f in ${COMMAND}*; do echo ${f} >> ${XDG_RUNTIME_DIR}/tmp_playlist.txt; done
+
+					# Play playlist
+					[[ ! "${SHUFFLE}" ]] && mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket --playlist=${XDG_RUNTIME_DIR}/tmp_playlist.txt &
+					[[   "${SHUFFLE}" ]] && mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket --shuffle  --playlist=${XDG_RUNTIME_DIR}/tmp_playlist.txt &
+
+					# Save mpde
+					echo "LOCAL_FOLDER" >> ${XDG_RUNTIME_DIR}/mode
+
+				elif [[ ${MODE} == "LOCAL_PLAYLIST" ]]; then
+
+					# Delete previous tmp playlist
+					[[ -f "${XDG_RUNTIME_DIR}/tmp_playlist.txt" ]] && rm "${XDG_RUNTIME_DIR}/tmp_playlist.txt"
+
+					# Dump command playlist into tmp playlist (IDK why mpv don't work when using the playlist specified by the command)
+					echo $(cat ${COMMAND}) >> ${XDG_RUNTIME_DIR}/tmp_playlist.txt
 
 					# Play playlist
 					[[ ! "${SHUFFLE}" ]] && mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket --playlist=${XDG_RUNTIME_DIR}/tmp_playlist.txt &
