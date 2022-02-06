@@ -161,7 +161,9 @@ run_command () {
 					[[ -f "${XDG_RUNTIME_DIR}/tmp_playlist.txt" ]] && rm "${XDG_RUNTIME_DIR}/tmp_playlist.txt"
 
 					# Dump command playlist into tmp playlist (IDK why mpv don't work when using the playlist specified by the command)
-					echo $(cat ${COMMAND}) >> ${XDG_RUNTIME_DIR}/tmp_playlist.txt
+					for f in $(cat ${COMMAND}); do
+						echo ${f} >> ${XDG_RUNTIME_DIR}/tmp_playlist.txt
+					done
 
 					# Play playlist
 					[[ ! "${SHUFFLE}" ]] && mpv --no-terminal --no-video --input-ipc-server=${XDG_RUNTIME_DIR}/mpvsocket --playlist=${XDG_RUNTIME_DIR}/tmp_playlist.txt &
