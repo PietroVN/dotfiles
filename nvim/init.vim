@@ -36,6 +36,9 @@ set nowrap
 " Enable number on sidebar
 set number
 
+" Set 256 colors
+let g:onedark_termcolors = 256
+
 " Enable onedark theme
 colorscheme onedark
 
