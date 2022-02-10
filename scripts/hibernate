@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-# Lock screen
-#lockscreen
-
-# Hibernate
-systemctl hibernate
