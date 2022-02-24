@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 YT=yt-dlp
-
-echo "Video/Song link: "
-read LINK
-echo ""
+COMMAND=$@
 
 echo "1 - Audio only"
 echo "2 - Video"
@@ -14,5 +11,5 @@ echo "Category:"
 read CATEGORY
 
 if [[ ${DOWNLOAD} -eq "1" ]]; then
-	${YT} -x --audio-format wav --audio-quality 0 --yes-playlist ${LINK} --restrict-filenames -o "~/musics/${CATEGORY}/%(playlist)s/%(title)s.%(ext)s"
+	${YT} -x --audio-format wav --audio-quality 0 --yes-playlist ${COMMAND} --restrict-filenames -o "~/musics/${CATEGORY}/%(playlist)s/%(title)s.%(ext)s"
 fi
