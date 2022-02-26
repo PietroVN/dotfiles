@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Allow local connections to x server
+echo "Adding local to xhost"
+xhost +local:
+
+cat << EOF | doas su
+# Mount fs
+echo "Mounting filesystems..."
+
+# Fix for pressure vessel bwrap (steam proton)
+mount -o bind /mnt/gaming-chroot /mnt/gaming-chroot
+
+# Mount pseudo filesystems
+mount --rbind /dev /mnt/gaming-chroot/dev
+mount --make-rslave /mnt/gaming-chroot/dev
+mount -t proc /proc /mnt/gaming-chroot/proc
+mount --rbind /sys /mnt/gaming-chroot/sys
+mount --make-rslave /mnt/gaming-chroot/sys
+mount --rbind /tmp /mnt/gaming-chroot/tmp
+mount --bind /run /mnt/gaming-chroot/run
+mount --bind /tmp/.X11-unix /mnt/gaming-chroot/tmp/.X11-unix
+EOF
+
+echo "Filesystems mounted"
+echo "Done your chroot is ready"
+
