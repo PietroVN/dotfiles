@@ -1,0 +1,27 @@
+#!/bin/bash
+# Command
+command="$@"
+
+# Check
+[[ "$UID" == "0" ]] && echo "Run as a normal user..."
+[[ "$UID" == "0" ]] && exit
+
+# Colors
+white="#ffffff"
+purple="#6502e6"
+purple2="#3a1094"
+
+# I3lock parameters
+lock_params="\
+			--blur 5 \
+			--clock \
+			--indicator \
+			--ring-color "$purple" \
+			--time-color "$white" \
+			--date-color "$white" \
+			--keyhl-color "$purple2" \
+			--bshl-color "$purple2" \
+			-e
+			"
+
+i3lock $lock_params
