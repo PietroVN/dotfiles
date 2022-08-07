@@ -1,0 +1,125 @@
+Module                  Size  Used by
+ufs                    81920  0
+qnx4                   16384  0
+hfsplus               110592  0
+hfs                    61440  0
+minix                  36864  0
+ntfs                  106496  0
+msdos                  20480  0
+jfs                   188416  0
+xfs                  1515520  0
+rfcomm                 81920  16
+ccm                    20480  3
+cmac                   16384  2
+algif_hash             16384  1
+algif_skcipher         16384  1
+af_alg                 28672  6 algif_hash,algif_skcipher
+bnep                   24576  2
+nls_iso8859_1          16384  1
+snd_hda_codec_realtek   139264  1
+snd_hda_codec_generic    81920  1 snd_hda_codec_realtek
+ledtrig_audio          16384  1 snd_hda_codec_generic
+snd_hda_codec_hdmi     61440  1
+snd_hda_intel          53248  7
+snd_intel_dspcfg       28672  1 snd_hda_intel
+btusb                  61440  0
+uvcvideo              102400  0
+snd_intel_sdw_acpi     20480  1 snd_intel_dspcfg
+btrtl                  24576  1 btusb
+videobuf2_vmalloc      20480  1 uvcvideo
+videobuf2_memops       20480  1 videobuf2_vmalloc
+snd_hda_codec         147456  4 snd_hda_codec_generic,snd_hda_codec_hdmi,snd_hda_intel,snd_hda_codec_realtek
+videobuf2_v4l2         32768  1 uvcvideo
+videobuf2_common       61440  4 videobuf2_vmalloc,videobuf2_v4l2,uvcvideo,videobuf2_memops
+snd_hda_core           94208  5 snd_hda_codec_generic,snd_hda_codec_hdmi,snd_hda_intel,snd_hda_codec,snd_hda_codec_realtek
+ath10k_pci             45056  0
+btbcm                  16384  1 btusb
+btintel                32768  1 btusb
+snd_hwdep              16384  1 snd_hda_codec
+snd_pcm               114688  6 snd_hda_codec_hdmi,snd_hda_intel,snd_hda_codec,snd_hda_core
+videodev              249856  3 videobuf2_v4l2,uvcvideo,videobuf2_common
+bluetooth             651264  41 btrtl,btintel,btbcm,bnep,btusb,rfcomm
+ath10k_core           507904  1 ath10k_pci
+snd_seq_midi           20480  0
+ath                    36864  1 ath10k_core
+ecdh_generic           16384  1 bluetooth
+ecc                    36864  1 ecdh_generic
+snd_seq_midi_event     16384  1 snd_seq_midi
+intel_rapl_msr         20480  0
+intel_rapl_common      24576  1 intel_rapl_msr
+snd_rawmidi            36864  1 snd_seq_midi
+mc                     57344  4 videodev,videobuf2_v4l2,uvcvideo,videobuf2_common
+mac80211             1028096  1 ath10k_core
+snd_seq                73728  2 snd_seq_midi,snd_seq_midi_event
+cfg80211              888832  3 ath,mac80211,ath10k_core
+edac_mce_amd           32768  0
+snd_seq_device         16384  3 snd_seq,snd_seq_midi,snd_rawmidi
+snd_timer              40960  2 snd_seq,snd_pcm
+snd                    94208  23 snd_hda_codec_generic,snd_seq,snd_seq_device,snd_hda_codec_hdmi,snd_hwdep,snd_hda_intel,snd_hda_codec,snd_hda_codec_realtek,snd_timer,snd_pcm,snd_rawmidi
+kvm_amd               118784  0
+libarc4                16384  1 mac80211
+joydev                 28672  0
+soundcore              16384  1 snd
+ccp                    98304  1 kvm_amd
+kvm                   864256  1 kvm_amd
+elan_i2c               49152  0
+k10temp                16384  0
+ideapad_laptop         24576  0
+input_leds             16384  0
+serio_raw              20480  0
+platform_profile       16384  1 ideapad_laptop
+sparse_keymap          16384  1 ideapad_laptop
+wmi_bmof               16384  0
+rapl                   20480  0
+mac_hid                16384  0
+efi_pstore             16384  0
+sch_fq_codel           20480  1
+msr                    16384  0
+parport_pc             45056  0
+ppdev                  24576  0
+lp                     20480  0
+parport                65536  3 parport_pc,lp,ppdev
+ip_tables              32768  0
+x_tables               49152  1 ip_tables
+autofs4                45056  2
+btrfs                1388544  0
+blake2b_generic        20480  0
+xor                    24576  1 btrfs
+zstd_compress         176128  1 btrfs
+raid6_pq              114688  1 btrfs
+libcrc32c              16384  2 btrfs,xfs
+dm_mirror              24576  0
+dm_region_hash         24576  1 dm_mirror
+dm_log                 20480  2 dm_region_hash,dm_mirror
+hid_generic            16384  0
+usbhid                 57344  0
+amdgpu               6344704  26
+crct10dif_pclmul       16384  1
+crc32_pclmul           16384  0
+ghash_clmulni_intel    16384  0
+aesni_intel           376832  5
+iommu_v2               24576  1 amdgpu
+gpu_sched              36864  1 amdgpu
+i2c_algo_bit           16384  1 amdgpu
+drm_ttm_helper         16384  1 amdgpu
+crypto_simd            16384  1 aesni_intel
+ttm                    69632  2 amdgpu,drm_ttm_helper
+cryptd                 24576  3 crypto_simd,ghash_clmulni_intel
+drm_kms_helper        253952  1 amdgpu
+syscopyarea            16384  1 drm_kms_helper
+sysfillrect            16384  1 drm_kms_helper
+sysimgblt              16384  1 drm_kms_helper
+fb_sys_fops            16384  1 drm_kms_helper
+cec                    53248  1 drm_kms_helper
+rc_core                61440  1 cec
+ahci                   40960  2
+i2c_hid_acpi           16384  0
+libahci                36864  1 ahci
+i2c_hid                28672  1 i2c_hid_acpi
+drm                   557056  13 gpu_sched,drm_kms_helper,amdgpu,drm_ttm_helper,ttm
+xhci_pci               20480  0
+i2c_piix4              28672  0
+xhci_pci_renesas       20480  1 xhci_pci
+wmi                    32768  2 wmi_bmof,ideapad_laptop
+video                  53248  1 ideapad_laptop
+hid                   139264  3 i2c_hid,usbhid,hid_generic
