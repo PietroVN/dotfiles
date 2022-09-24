@@ -19,9 +19,16 @@ mount --rbind /sys /mnt/gaming-chroot/sys
 mount --make-rslave /mnt/gaming-chroot/sys
 mount --rbind /tmp /mnt/gaming-chroot/tmp
 mount --bind /run /mnt/gaming-chroot/run
+
+# Bind X
 mount --bind /tmp/.X11-unix /mnt/gaming-chroot/tmp/.X11-unix
+
+# Bind ccache
+mount -o bind /var/cache/ccache/ /mnt/gaming-chroot/var/cache/
+
 EOF
 
 echo "Filesystems mounted"
 echo "Done your chroot is ready"
+
 

@@ -1,4 +1,6 @@
 #!/bin/bash
+# By: Wa1t5
+
 # Command
 command="$@"
 
