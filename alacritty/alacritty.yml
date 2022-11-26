@@ -2,7 +2,8 @@
 TERM: 'alacritty'
 
 # Opacity
-window.opacity: 1.0
+window:
+    opacity: 0.1
 
 # Themes
 schemes:
@@ -12,7 +13,7 @@ schemes:
       foreground: '#f8f8f2'
 
     normal:
-      black:   '#1b1c1c'
+      black:   '#5e5d5d'
       red:     '#ff4046'
       green:   '#50ff40'
       yellow:  '#f9ff40'

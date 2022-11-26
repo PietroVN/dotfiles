@@ -1,1 +1,84 @@
-/home/waltz/.config/waybar/style.css
+* 
+{
+    /* Fonts */
+    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+}
+
+window#waybar {
+    background-color: transparent;
+    border-bottom: 0px solid rgba(100, 114, 125, 0.5);
+    color: #ffffff;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+button {
+    /* Use box-shadow instead of border so the text isn't offset */
+    box-shadow: inset 0 -3px transparent;
+
+    /* Avoid rounded borders under each button name */
+    border: none;
+    border-radius: 0;
+}
+
+/* Workspaces hover effect | below the workspace */
+button:hover {
+    color: inherit;
+    /*box-shadow: inset 0 -3px #ffffff;*/
+}
+
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+    color: #ffffff;
+}
+
+/* Workspace hover effect | color  */
+#workspaces button:hover {
+    background: #828282;
+}
+
+
+/* That bar bottom on workspace */
+#workspaces button.active {
+    background-color: #5a0fa6;
+    /*box-shadow: inset 0 -3px #ffffff;*/
+}
+
+
+/* Color when a workspace need focus */
+#workspaces button.urgent {
+    background-color: #eb4d4b;
+}
+
+/* ??? */
+#mode {
+    background-color: #64727D;
+    border-bottom: 3px solid #ffffff;
+}
+
+/* Workspaces */
+#workspaces {
+    margin: 0 4px;
+}
+
+/* Custom/bar */
+#custom-bar {
+   background-color: #5a0fa6;
+}
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 0;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #workspaces {
+    margin-right: 0;
+}

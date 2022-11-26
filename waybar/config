@@ -1,1 +1,33 @@
-/home/waltz/.config/waybar/config
+{
+    // Waybar layer and position
+    "layer": "top",
+    "position": "top", // (top|bottom|left|right)
+
+    // Size
+    "height": 15, // Waybar height (to be removed for auto height)
+    // "width": 1280, // Waybar width
+    "spacing": 4, // Gaps between modules (4px)
+
+
+    // Modules left
+    "modules-left": ["wlr/workspaces"],
+
+    // Modules center
+    //"modules-center": [""],
+
+    // Modules right
+    "modules-right": ["custom/bar"],
+
+    // *MODULES CONFIG* \\
+
+    // Custom/bar | Runs my custom bar.sh script
+    "custom/bar": {
+		"exec": "/home/waltz/.config/hypr/bar.sh"
+    },
+
+    //  Wlroots workspaces
+    "wlr/workspaces": {
+	     "on-click": "activate"
+         }
+     },
+}

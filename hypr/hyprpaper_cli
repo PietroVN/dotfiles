@@ -1,0 +1,58 @@
+#/usr/bin/env bash
+#########################################################
+# Script to manage hyprpaper easily on the fly			#
+# By: Waltz												#
+# All credits goes to Hyprwm, they have created: 		#
+# 	Hypr, Hyprland and Hyprpaper						#
+#########################################################
+# This script works by simply pointing hyprpaper to a	#
+# temp config file, and then we update the contents and	#
+# we run hyprland again so it can update the wallpaper	#
+# and unload the previous								#
+#########################################################
+# Deps: Hyprpaper, Hyprland								#
+#########################################################
+
+
+# Config path (You can change this to hyprpaper.conf but be aware to backup your default config file!)
+config="$HOME/.config/hypr/hyprpaper_cli.conf"
+
+# Receive image as an argument
+image_path="$@"
+
+# Help menu
+if [[ "$image_path" == "--help" ]]; then
+	echo "Hyprpaper CLI parameters:"
+	echo "	--help - Help menu"
+	echo "	Usage: hyprpaper_cli <image_path>"
+fi
+
+# Pick image from clipboard if we receive clipboard as image path (using wl-paste)
+[[ "$image_path" == "clipboard" ]] && image_path="$(wl-paste)"
+
+# Check if user already has a config and hasn't passed an argument
+if [[ -z "$image_path" ]]; then
+
+	# Start hyprpaper using user existent config
+	[[ -f "$config" ]] && hyprpaper --config "$config" &
+
+	# Tell user to create a config
+	[[ -f "$config" ]] || echo "You don't have an config file, you'll need to set some image as wallpaper to create one" && exit 0
+fi
+
+echo "$image_path"
+# Check if image exists
+if [[ -f "$image_path" ]]; then
+
+	# Save image to tmp config path
+	echo "preload = "$image_path"" > "$config"
+	echo "wallpaper = eDP-1,"$image_path"" >> "$config"
+
+	# Kill previous instance (Not necessary, only enable if needed)
+	#[[ $(pgrep hyprpaper) ]] && killall hyprpaper
+
+	# Start hyprpaper
+	hyprpaper --config "$config" &
+else
+	echo "Inexistent image"
+fi
