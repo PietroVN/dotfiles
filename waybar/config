@@ -22,12 +22,13 @@
 
     // Custom/bar | Runs my custom bar.sh script
     "custom/bar": {
-		"exec": "/home/waltz/.config/hypr/bar.sh"
+		"exec": "/home/waltz/.config/hypr/bar.sh",
     },
 
     //  Wlroots workspaces
     "wlr/workspaces": {
-	     "on-click": "activate"
-         }
+		 "active-only": "false",
+	     "on-click": "activate",
+         },
      },
 }

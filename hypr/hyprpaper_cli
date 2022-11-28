@@ -19,6 +19,7 @@ config="$HOME/.config/hypr/hyprpaper_cli.conf"
 
 # Receive image as an argument
 image_path="$@"
+monitor="eDP-1"
 
 # Help menu
 if [[ "$image_path" == "--help" ]]; then
@@ -27,32 +28,31 @@ if [[ "$image_path" == "--help" ]]; then
 	echo "	Usage: hyprpaper_cli <image_path>"
 fi
 
+# Start hyprpaper if config file already exists
+[[ -f "$config" && ! "$(pgrep hyprpaper)" ]] && hyprpaper --config "$config" &
+
+# User hasn't passed any argument to script, don't have a config file
+[[ -z "$image_path" && ! -f "$config" ]] && \
+	echo "You don't have an config file, you'll need to set some image as wallpaper to create one" \
+	exit 0
+
+
 # Pick image from clipboard if we receive clipboard as image path (using wl-paste)
 [[ "$image_path" == "clipboard" ]] && image_path="$(wl-paste)"
 
-# Check if user already has a config and hasn't passed an argument
-if [[ -z "$image_path" ]]; then
-
-	# Start hyprpaper using user existent config
-	[[ -f "$config" ]] && hyprpaper --config "$config" &
-
-	# Tell user to create a config
-	[[ -f "$config" ]] || echo "You don't have an config file, you'll need to set some image as wallpaper to create one" && exit 0
-fi
-
-echo "$image_path"
 # Check if image exists
 if [[ -f "$image_path" ]]; then
 
-	# Save image to tmp config path
+	# Save image to config file
 	echo "preload = "$image_path"" > "$config"
-	echo "wallpaper = eDP-1,"$image_path"" >> "$config"
+	echo "wallpaper = "$monitor","$image_path"" >> "$config"
 
-	# Kill previous instance (Not necessary, only enable if needed)
-	#[[ $(pgrep hyprpaper) ]] && killall hyprpaper
+	# Unload all previous wallpaper
+	hyprctl hyprpaper unload all
 
-	# Start hyprpaper
-	hyprpaper --config "$config" &
+	# Set new wallpaper
+	hyprctl hyprpaper preload "$image_path"
+	hyprctl hyprpaper wallpaper "$monitor","$image_path"
 else
 	echo "Inexistent image"
 fi
