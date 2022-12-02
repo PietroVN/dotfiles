@@ -138,10 +138,10 @@ gradient_color_8 = '#200040'
 
 # Percentage value for integral smoothing. Takes values from 0 - 100.
 # Higher values means smoother, but less precise. 0 to disable.
-integral = 40
+integral = 70
 
 # Disables or enables the so-called "Monstercat smoothing" with or without "waves". Set to 0 to disable.
-monstercat = 1
+monstercat = 0
 waves = 1
 
 # Set gravity percentage for "drop off". Higher values means bars will drop faster.

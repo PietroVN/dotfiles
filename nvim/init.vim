@@ -15,6 +15,7 @@ call plug#end()
 set tabstop=4
 set shiftwidth=4
 
+
 " Custom colors
 let g:onedark_color_overrides = {
       \ "background":  { "gui": "#fffffff", "cterm": "0", "cterm16": "0" },

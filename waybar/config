@@ -22,7 +22,7 @@
 
     // Custom/bar | Runs my custom bar.sh script
     "custom/bar": {
-		"exec": "/home/waltz/.config/hypr/bar.sh",
+		"exec": "/home/waltz/.config/waybar/bar.sh",
     },
 
     //  Wlroots workspaces
