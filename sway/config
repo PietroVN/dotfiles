@@ -2,12 +2,13 @@
 set $mod Mod4
 
 ##### Apps
-set $term foot
+set $term kitty
 set $menu bemenu-run
 
 ##### Start
 exec gentoo-pipewire-launcher
 exec light -I
+exec ~/.config/sway/audio.sh
 
 ##### Wallpaper
 output eDP-1 {
@@ -47,7 +48,6 @@ client.unfocused #595959 #595959 #595959 #595959
 gaps outer 3
 gaps inner 3
 
-
 ##### Bindings
 # Start terminal
 bindsym $mod+t exec $term
@@ -62,6 +62,15 @@ bindsym XF86MonBrightnessDown exec light -U 10 | light -O
 # Control volume
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+
+# Toggle volume
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# Music script
+bindsym XF86AudioPlay exec music pause
+bindsym XF86AudioNext exec music advance
+bindsym XF86AudioPrev exec music return
 
 # Screenshot
 bindsym $mod+p exec grim - | wl-copy -t image/png

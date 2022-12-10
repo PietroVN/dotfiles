@@ -1,35 +1,34 @@
 #/usr/bin/env bash
 #########################################################
-# Script to manage hyprpaper easily on the fly			#
+# Script to manage wallpapers easily on the fly			#
 # By: Waltz												#
-# All credits goes to Hyprwm, they have created: 		#
-# 	Hypr, Hyprland and Hyprpaper						#
 #########################################################
 # This script works by simply pointing hyprpaper to a	#
 # temp config file, and then we update the contents and	#
 # we run hyprland again so it can update the wallpaper	#
 # and unload the previous								#
 #########################################################
-# Deps: Hyprpaper, Hyprland								#
+# Deps: Hyprpaper, Swaybg, Hyprland								#
 #########################################################
 
-
 # Config path (You can change this to hyprpaper.conf but be aware to backup your default config file!)
-config="$HOME/.config/hypr/hyprpaper_cli.conf"
+config="$HOME/.config/hypr/wallpaper_cli.conf"
 
 # Receive image as an argument
 image_path="$@"
 monitor="eDP-1"
+wallpaper_mngr="swaybg" # Hyprpaper / Swaybg
 
 # Help menu
 if [[ "$image_path" == "--help" ]]; then
-	echo "Hyprpaper CLI parameters:"
+	echo "Wallpaper CLI parameters:"
 	echo "	--help - Help menu"
-	echo "	Usage: hyprpaper_cli <image_path>"
+	echo "	Usage: wallpaper_cli <image_path>"
 fi
 
-# Start hyprpaper if config file already exists
-[[ -f "$config" && ! "$(pgrep hyprpaper)" ]] && hyprpaper --config "$config" &
+# Start wallpaper_mng if config file already exists
+[[ "$wallpaper_mngr" == "hyrpaper" && -f "$config" && ! "$(pgrep hyprpaper)" ]] && hyprpaper --config "$config" &
+[[ "$wallpaper_mngr" == "swaybg" && -f "$config" && ! "$(pgrep swaybg)" ]] && swaybg -i "$(cat $config)" &
 
 # User hasn't passed any argument to script, don't have a config file
 [[ -z "$image_path" && ! -f "$config" ]] && \
@@ -43,16 +42,22 @@ fi
 # Check if image exists
 if [[ -f "$image_path" ]]; then
 
-	# Save image to config file
-	echo "preload = "$image_path"" > "$config"
-	echo "wallpaper = "$monitor","$image_path"" >> "$config"
+	if [[ "$wallpaper_mngr" == "hyprpaper" ]]; then
+		# Save image to config file
+		echo "preload = "$image_path"" > "$config"
+		echo "wallpaper = "$monitor","$image_path"" >> "$config"
 
-	# Unload all previous wallpaper
-	hyprctl hyprpaper unload all
+		# Unload all previous wallpaper
+		hyprctl hyprpaper unload all
 
-	# Set new wallpaper
-	hyprctl hyprpaper preload "$image_path"
-	hyprctl hyprpaper wallpaper "$monitor","$image_path"
+		# Set new wallpaper
+		hyprctl hyprpaper preload "$image_path"
+		hyprctl hyprpaper wallpaper "$monitor","$image_path"
+	else
+		killall "swaybg"
+		echo "$image_path" > "$config"
+		swaybg -i "$image_path" &
+	fi
 else
 	echo "Inexistent image"
 fi

@@ -55,8 +55,7 @@ music() {
 }
 
 print() {
-	echo ",[{\"full_text\":\"$time$day$battery$temp$music\",\"background\":\"$bg_color\"}]"
-	
+	echo ",[{\"full_text\":\"$time$day$battery$temp$music\",\"background\":\"$bg_color\"}]"	
 }
 
 # Initialize i3bar protocol
