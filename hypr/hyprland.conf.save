@@ -10,13 +10,11 @@ $inactive_border_col	= rgb(595959)
 # Startup
 exec-once = dbus-update-activation-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 exec-once = light -I
-exec-once = mako
 exec-once = gentoo-pipewire-launcher
 exec-once = $top_bar
 exec-once = ~/.config/hypr/wallpaper_cli
 exec-once = ~/.config/hypr/animate_border "$active_border_col"
 exec-once = ~/.config/hypr/audio
-
 # Monitor
 monitor=,preferred,auto,1
 
@@ -62,7 +60,7 @@ decoration {
 }
 
 # Blur waybar
-blurls = waybar
+xxblurls = waybar
 
 # Animations
 animations {

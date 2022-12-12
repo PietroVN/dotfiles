@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 ###################################
 # Custom bar script		  #
 # By: Waltz			  #
@@ -9,21 +9,35 @@ song_name_path="$XDG_RUNTIME_DIR/name"
 song_pause_path="$XDG_RUNTIME_DIR/music-paused"
 mpv_socket_path="$XDG_RUNTIME_DIR/music-socket"
 
+# Modules
+modules="$@"
+
+if [[ -z "$modules" ]]; then
+	echo "Modules:"
+	echo "- Clock"
+	echo "- Calendar"
+	echo "- Battery"
+	echo "- Temperature"
+	echo "- Music"
+	echo "E.g: bar.sh day clock"
+	exit 0
+fi
+
 # Functions
 clock() {
-	time="$(date +%H:%M)"
+	clock="$(date +%H:%M) "
 }
 
-day() {
-	day=" | $(date +%d/%m/%y)"
+calendar() {
+	calendar="$(date +%d/%m/%y) "
 }
 
 battery() {
-	battery=" | $(echo "$(cat "/sys/class/power_supply/BAT0/capacity")%")"
+	battery="$(cat '/sys/class/power_supply/BAT0/capacity')% "
 }
 
-temp() {
-	temp=" | $(echo "$(sed s/000//g /sys/class/hwmon/hwmon3/temp1_input)C")"
+temperature() {
+	temperature="$(sed s/000//g '/sys/class/hwmon/hwmon3/temp1_input')C "
 }
 
 music() {
@@ -33,34 +47,46 @@ music() {
 		title_size="$(cat "$song_name_path" | awk '{print length}')"
 
 		# Roll size (the max characters that will be visible at the same time)
-		roll_size="30"
+		#roll_size="30"
+		rool_size="$title_size"
 
 		# Initial values
-		[[ "$roll_end" -ge "title_size" || -z "$roll_start" ]] && roll_start="1"
-		[[ "$roll_end" -ge "title_size" || -z "$roll_end" ]] && roll_end="$roll_size"
+		[[ "$roll_end" -ge "$title_size" || -z "$roll_start" ]] && roll_start="1"
+		[[ "$roll_end" -ge "$title_size" || -z "$roll_end" ]] && roll_end="$roll_size"
 
 		# Song name var (if paused song name will be exhibited with exclamation  prefix)
-		[[ $(cat "$song_pause_path") == "no" || $(cat "$song_pause_path" | wc -l) ]] && song=" | $(cut -b "$roll_start"-"$roll_end" "$song_name_path")"
-		[[ $(cat "$song_pause_path") == "yes" ]] && song=" | !$(cut -b "$roll_start"-"$roll_end" "$song_name_path")"
+		[[ $(cat "$song_pause_path") == "no" || $(cat "$song_pause_path" | wc -l) ]] && music=" $(cut -b "$roll_start"-"$roll_end" "$song_name_path")"
+		[[ $(cat "$song_pause_path") == "yes" ]] && music=" $(cut -b "$roll_start"-"$roll_end" "$song_name_path")"
 
 		# Make the roll effect
-		roll_start=$((roll_start + 1))
-		roll_end=$((roll_end + 1))
+		#roll_start=$((roll_start + 1))
+		#roll_end=$((roll_end + 1))
 	else
-		[[ -z "$song" ]] || unset song
+		[[ -z "$music" ]] || unset music
 	fi
 }
 
 # Main loop
 while true; do
-	music
-	clock
-	day
-	battery
-	temp
 
-	# Set root window title
-	echo "$time$day$battery$temp$song"
+	# Load and update modules
+	[[ "$modules" == *"music"*        ]] && music
+	[[ "$modules" == *"clock"*        ]] && clock
+	[[ "$modules" == *"calendar"*     ]] && calendar
+	[[ "$modules" == *"battery"*      ]] && battery
+	[[ "$modules" == *"temperature"*  ]] && temperature
+
+	# All
+	if [[ "$modules" == "all" ]];then
+		music
+		clock
+		day
+		battery
+		temp
+	fi
+
+	# Print modules
+	echo "$clock$calendar$battery$temperature$music"
 
 	# Wait 1 second
 	sleep 1
