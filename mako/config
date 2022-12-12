@@ -1,0 +1,6 @@
+# Coloring
+background-color=#000000
+border-color=#5a0fa6
+
+# Timeout
+default-timeout=9000
