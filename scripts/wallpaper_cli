@@ -17,7 +17,7 @@ config="$HOME/.config/hypr/wallpaper_cli.conf"
 # Receive image as an argument
 image_path="$@"
 monitor="eDP-1"
-wallpaper_mngr="swaybg" # Hyprpaper / Swaybg
+wallpaper_mngr="hyprpaper" # Hyprpaper / Swaybg
 
 # Help menu
 if [[ "$image_path" == "--help" ]]; then
@@ -27,7 +27,7 @@ if [[ "$image_path" == "--help" ]]; then
 fi
 
 # Start wallpaper_mng if config file already exists
-[[ "$wallpaper_mngr" == "hyrpaper" && -f "$config" && ! "$(pgrep hyprpaper)" ]] && hyprpaper --config "$config" &
+[[ "$wallpaper_mngr" == "hyprpaper" && -f "$config" && ! "$(pgrep hyprpaper)" ]] && hyprpaper --config "$config" &
 [[ "$wallpaper_mngr" == "swaybg" && -f "$config" && ! "$(pgrep swaybg)" ]] && swaybg -i "$(cat $config)" &
 
 # User hasn't passed any argument to script, don't have a config file

@@ -9,7 +9,7 @@ song_name_path="$XDG_RUNTIME_DIR/music-name"
 song_pause_path="$XDG_RUNTIME_DIR/music-paused"
 mpv_socket_path="$XDG_RUNTIME_DIR/music-socket"
 
-# Modules
+# Options
 modules="$@"
 
 if [[ -z "$modules" ]]; then
@@ -37,7 +37,7 @@ battery() {
 }
 
 temperature() {
-	temperature="$(sed s/000//g '/sys/class/hwmon/hwmon3/temp1_input')C "
+	temperature="$(sed 's/+//g' <<<  "$(sensors | grep "Tctl" | awk '{print $2}')") "
 }
 
 music() {
@@ -83,9 +83,9 @@ while true; do
 	if [[ "$modules" == "all" ]];then
 		music
 		clock
-		day
+		calendar
 		battery
-		temp
+		temperature
 	fi
 
 	# Print modules

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 while true; do
 	pactl set-source-volume @DEFAULT_SOURCE@ 32%
+	pactl set-source-port @DEFAULT_SOURCE@ analog-input-headset-mic
 done

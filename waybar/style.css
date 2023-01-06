@@ -25,7 +25,7 @@ button {
     border: none;
     border-radius: 0;
 
-    box-shadow: inset 0 -2px #372f8a;
+    box-shadow: inset 0 -3px #372f8a;
 }
 
 /* Workspaces hover effect | below the workspace */
@@ -70,31 +70,31 @@ button:hover {
 /* Custom/bar: Clock  */
 #custom-clock {
    background-color: transparent;
-   box-shadow: inset 0 -2px #deb031;
+   box-shadow: inset 0 -3px #deb031;
 }
 
 /* Custom/bar: Calendar */
 #custom-calendar {
    background-color: transparent;
-   box-shadow: inset 0 -2px #d8eb2d;
+   box-shadow: inset 0 -3px #d8eb2d;
 }
 
 /* Custom/bar: Battery */
 #custom-battery {
    background-color: transparent;
-   box-shadow: inset 0 -2px #6328e0;
+   box-shadow: inset 0 -3px #6328e0;
 }
 
 /* Custom/bar: Temperature */
 #custom-temperature {
    background-color: transparent;
-   box-shadow: inset 0 -2px #eb4034;
+   box-shadow: inset 0 -3px #eb4034;
 }
 
 /* Custom/bar: Music */
 #custom-music {
    background-color: transparent;
-   box-shadow: inset 0 -2px #6d24c7;
+   box-shadow: inset 0 -3px #6d24c7;
 }
 
 /* If workspaces is the leftmost module, omit left margin */

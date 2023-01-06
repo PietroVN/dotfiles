@@ -6,14 +6,12 @@ set $term kitty
 set $menu bemenu-run
 
 ##### Start
-exec gentoo-pipewire-launcher
-exec light -I
-exec ~/.config/sway/audio.sh
+exec ~/git/dotfiles/scripts/audio
 
 ##### Wallpaper
-output eDP-1 {
-	background ~/wallpapers/img/mob_psycho/mob_psycho.png fill
-}
+#output eDP-1 {
+#	background ~/wallpapers/img/mob_psycho/mob_psycho.png fill
+#}
 
 ### Idle configuration
 #
