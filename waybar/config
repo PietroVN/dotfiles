@@ -21,27 +21,27 @@
 
     // Custom/bar: Clock
     "custom/clock": {
-		"exec": "/home/waltz/git/dotfiles/scripts/bar clock",
+		"exec": "/home/waltz/.local/src/dotfiles/scripts/bar clock",
     },
 
     // Custom/bar: Calendar
     "custom/calendar": {
-		"exec": "/home/waltz/git/dotfiles/scripts/bar  calendar",
+		"exec": "/home/waltz/.local/src/dotfiles/scripts/bar  calendar",
     },
 
     // Custom/bar: Battery
     "custom/battery": {
-		"exec": "/home/waltz/git/dotfiles/scripts/bar  battery",
+		"exec": "/home/waltz/.local/src/dotfiles/scripts/bar  battery",
     },
 
     // Custom/bar: Temperature
     "custom/temperature": {
-		"exec": "/home/waltz/git/dotfiles/scripts/bar  temperature",
+		"exec": "/home/waltz/.local/src/dotfiles/scripts/bar  temperature",
     },
 
     // Custom/bar: Music
 	"custom/music": {
-		"exec": "/home/waltz/git/dotfiles/scripts/bar  music",
+		"exec": "/home/waltz/.local/src/dotfiles/scripts/bar  music",
 		"on-click": "music pause",
     },
 

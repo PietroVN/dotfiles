@@ -4,6 +4,11 @@
 col="$@"
 border_angle=0
 
+# Kill other instances
+for pid in $(ps -ax | grep "scripts/animate_border" | grep -v "grep" | awk '{print $1}'); do
+	[ ${pid} -eq $$ ] || kill -9 ${pid}
+done
+
 # Main Loop
 while true; do
 
