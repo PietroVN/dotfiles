@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # Kill other instances
-#for pid in $(ps -ax | grep "scripts/audio" | grep -v "grep" | awk '{print $1}'); do
-#	[ "${pid}" -eq "$$" ] || kill -9 ${pid}
-#done
+for pid in $(ps -ax | grep "scripts/audio" | grep -v "grep" | awk '{print $1}'); do
+	[ "${pid}" -eq "$$" ] || kill -9 ${pid}
+done
 
 while true; do
 	# Set microphone volume
@@ -11,4 +11,5 @@ while true; do
 	
 	# Set default source
 	pactl set-source-port @DEFAULT_SOURCE@ analog-input-headset-mic
+	sleep 60
 done
