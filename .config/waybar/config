@@ -1,0 +1,95 @@
+{
+    // Waybar layer and position
+    "layer": "top",
+    "position": "top", // (top|bottom|left|right)
+
+    // Size
+    // "height": 4, // Waybar height (to be removed for auto height)
+    // "width": 1280, // Waybar width
+    "spacing": 4, // Gaps between modules (4px)
+
+    // Modules left
+    "modules-left": ["hyprland/workspaces"],
+
+    // Modules center
+    "modules-center": ["custom/music"],
+
+    // Modules right
+    "modules-right": ["tray", "clock", "custom/calendar", "battery", "temperature"],
+
+    // *MODULES CONFIG* \\
+
+    // Custom/bar: Clock
+    "custom/clock": {
+		"exec": "/home/waltz/.local/src/dotfiles/scripts/bar clock",
+    },
+
+	// Clock
+	"clock": {
+    	"interval": 60,
+	    "format": "{:%H:%M}  ",
+   	 	"max-length": 25
+	},
+
+    // Custom/bar: Calendar
+    "custom/calendar": {
+		"exec": "/home/waltz/.local/src/dotfiles/scripts/bar  calendar",
+    },
+
+    // Custom/bar: Battery
+    "custom/battery": {
+		"exec": "/home/waltz/.local/src/dotfiles/scripts/bar  battery",
+    },
+
+	// Battery
+	"battery": {
+   		"bat": "BAT0",
+    	"interval": 60,
+    	"states": {
+        	"warning": 30,
+        	"critical": 15
+    	},
+    	"format": "{capacity}% {icon}",
+    	"format-icons": ["", "", "", "", ""],
+    	"max-length": 25
+	},
+
+    // Custom/bar: Temperature
+    "custom/temperature": {
+		"exec": "/home/waltz/.local/src/dotfiles/scripts/bar  temperature",
+    },
+	
+	// Temperature
+	"temperature": {
+    	// "thermal-zone": 0,
+	    "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+   	 	// "critical-threshold": 80,
+    	// "format-critical": "{temperatureC}°C ",
+    	"format": "{temperatureC}°C "
+	},
+
+    // Custom/bar: Music
+	"custom/music": {
+		"exec": "/home/waltz/.local/src/dotfiles/scripts/bar  music",
+		"on-click": "music pause",
+    },
+
+	// Hyprland workspaces
+	"hyprland/workspaces": {
+		"format": "{icon}",
+		"format-icons": {
+			//"1": "",
+			//"2": "",
+			//"3": "",
+			//"4": "",
+			//"5": "",
+			"active": "",
+			"default": ""
+		},
+	},
+
+	// Cava
+	"cava": {
+        "cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
+    },
+}

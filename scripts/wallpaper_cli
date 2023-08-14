@@ -20,13 +20,13 @@ monitor="eDP-1"
 wallpaper_mngr="hyprpaper" # Hyprpaper / Swaybg
 
 # Help menu
-if [[ "$image_path" == "--help" ]]; then
+if [[ "$image_path" == *"-h"* ]]; then
 	echo "Wallpaper CLI parameters:"
 	echo "	--help - Help menu"
 	echo "	Usage: wallpaper_cli <image_path>"
 fi
 
-# Start wallpaper_mng if config file already exists
+# Start wallpaper_mngr if config file already exists
 [[ "$wallpaper_mngr" == "hyprpaper" && -f "$config" && ! "$(pgrep hyprpaper)" ]] && hyprpaper --config "$config" &
 [[ "$wallpaper_mngr" == "swaybg" && -f "$config" && ! "$(pgrep swaybg)" ]] && swaybg -i "$(cat $config)" &
 
@@ -34,7 +34,6 @@ fi
 [[ -z "$image_path" && ! -f "$config" ]] && \
 	echo "You don't have an config file, you'll need to set some image as wallpaper to create one" \
 	exit 0
-
 
 # Pick image from clipboard if we receive clipboard as image path (using wl-paste)
 [[ "$image_path" == "clipboard" ]] && image_path="$(wl-paste)"
