@@ -2,5 +2,15 @@
 background-color=#000000
 border-color=#5a0fa6
 
+[urgency=low]
+border-color=#4c41f0
+
+[urgency=normal]
+border-color=#4e1bb5
+
+[urgency=high]
+border-color=#e81523
+default-timeout=0
+
 # Timeout
 default-timeout=9000
