@@ -10,6 +10,8 @@ while true; do
 	pactl set-source-volume @DEFAULT_SOURCE@ 32%
 	
 	# Set default source
-	pactl set-source-port @DEFAULT_SOURCE@ analog-input-headset-mic
+	#pactl set-source-port @DEFAULT_SOURCE@ analog-input-headset-mic
+	pactl set-source-port @DRFAULT_SOURCE@ analog-input-internal-mic
+
 	sleep 60
 done
